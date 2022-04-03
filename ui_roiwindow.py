@@ -33,6 +33,7 @@ class Ui_ROIWindow(QWidget):
         self.label.mouseMoveEvent = self.show_mouse_move
         self.keyPressEvent = self.key_Press_Event
         
+        
     def show_img(self, qimg):
         width = qimg.size().width()
         height = qimg.size().height()
