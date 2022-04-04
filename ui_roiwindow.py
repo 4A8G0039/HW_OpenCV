@@ -1,10 +1,9 @@
-from tkinter.messagebox import NO
+import cv2
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 import numpy as np
-import cv2
-from sympy import Q
+
 
 class Ui_ROIWindow(QWidget):
     def __init__(self, cRoi_o, cRoi_r, qRoi):
@@ -39,11 +38,11 @@ class Ui_ROIWindow(QWidget):
         height = qimg.size().height()
         self.label.setPixmap(qimg)
         self.label.setFixedSize(width, height)
-        if width >= 200 or height >= 200:
+        if width >= 300 or height >= 300:
             self.setFixedSize(width, height) 
             self.label.setFixedSize(width, height)
         else:
-            self.setFixedSize(200, 200)
+            self.setFixedSize(300, 300)
             self.label.setFixedSize(width, height)
 
     def show_mouse_press(self, event):
@@ -92,11 +91,12 @@ class Ui_ROIWindow(QWidget):
                 self.label.mouseMoveEvent = None
                 self.show_img(self.cvimgTOqtimg(self.cRoi_r[self.y0 : self.y1, self.x0 : self.x1]))
                 self.seave = True
+                print(self.y0, self.y1, self.x0, self.x1)
 
             elif self.seave:
+                x = self.cRoi_o.shape[0] / self.cRoi_r.shape[0]
                 filename, _ = QFileDialog.getSaveFileName(self, "SaveFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
-                print(self.y0, self.y1, self.x0, self.x1)
-                cv2.imencode('.png', self.cRoi_r[self.y0 : self.y1, self.x0 : self.x1])[1].tofile(filename)
+                cv2.imencode('.png', self.cRoi_o[int(self.y0 * x): int(self.y1 * x), int(self.x0  * x): int(self.x1 * x)])[1].tofile(filename)
                 print("Save Path :", filename)
                 self.close()
 
