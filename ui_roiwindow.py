@@ -38,12 +38,19 @@ class Ui_ROIWindow(QWidget):
         height = qimg.size().height()
         self.label.setPixmap(qimg)
         self.label.setFixedSize(width, height)
-        if width >= 300 or height >= 300:
-            self.setFixedSize(width, height) 
-            self.label.setFixedSize(width, height)
+
+        if width >= 300:
+            if height >= 300:
+                self.setFixedSize(width, height)
+            else:
+                self.setFixedSize(width, 300)
         else:
-            self.setFixedSize(300, 300)
-            self.label.setFixedSize(width, height)
+            if height >= 300:
+                self.setFixedSize(300, height)
+            else:
+                self.setFixedSize(300, 300)
+
+        self.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
 
     def show_mouse_press(self, event):
         print(f"[show_mouse_press] {event.x()=}, {event.y()=}, {event.button()=}")
@@ -91,7 +98,7 @@ class Ui_ROIWindow(QWidget):
                 self.label.mouseMoveEvent = None
                 self.show_img(self.cvimgTOqtimg(self.cRoi_r[self.y0 : self.y1, self.x0 : self.x1]))
                 self.seave = True
-                print(self.y0, self.y1, self.x0, self.x1)
+                print("Height : %d, Width : %d" % (self.y1 - self.y0, self.x1 - self.x0))
 
             elif self.seave:
                 x = self.cRoi_o.shape[0] / self.cRoi_r.shape[0]

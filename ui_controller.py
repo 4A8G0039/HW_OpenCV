@@ -27,29 +27,31 @@ class MainWindow(QMainWindow):
         if self.filename != "":
             print("Open Path :", self.filename)
             self.cImg_o=cv2.imdecode(np.fromfile(self.filename,dtype=np.uint8),-1)
-            self.qImg, self.img_height_r, self.img_width_r, self.cImg_r = self.cvimgTOqtimg(self.cImg_o)
+            self.qImg, self.cImg_r = self.cvimgTOqtimg(self.cImg_o)
             self._window.Img_Lable.setPixmap(self.qImg)
-            if self.img_width_r >= 300 or self.img_height_r >= 300:
-                self._window.Img_Lable.setFixedSize(self.img_width_r, self.img_height_r)
-                self.setFixedSize(self.img_width_r, self.img_height_r + 45)
+            if self.qImg.size().width() >= 300:
+                if self.qImg.size().height() >= 300:
+                    self._window.Img_Lable.setFixedSize(self.qImg.size().width(), self.qImg.size().height())
+                    self.setFixedSize(self.qImg.size().width(), self.qImg.size().height() + 45)
+                else:
+                    self._window.Img_Lable.setFixedSize(self.qImg.size().width(), 300)
+                    self.setFixedSize(self.qImg.size().width(), 345)
             else:
-                self._window.Img_Lable.setFixedSize(300, 300)
-                self.setFixedSize(300, 345)
+                if self.qImg.size().height() >= 300:
+                    self._window.Img_Lable.setFixedSize(300, self.qImg.size().height())
+                    self.setFixedSize(300, self.qImg.size().height() + 45)
+                else:
+                    self._window.Img_Lable.setFixedSize(300, 300)
+                    self.setFixedSize(300, 345)
+            print((QApplication.desktop().width() - self.width())/2, (QApplication.desktop().height() - self.height())/2)
+            self.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) - 20)
             self._window.statusbar.showMessage(self.filename.split("/")[-1])
             
     def ROI(self):
         if self.filename != "":
             self.ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
-            #self.ROIWindow.show_img(self.qImg)
-            # self.ROIWindow.label.setPixmap(self.qImg)
-            # self.ROIWindow.label.setFixedSize(self.img_width_r, self.img_height_r)
-            # if self.img_width_r >= 200 or self.img_height_r >= 200:
-            #     self.ROIWindow.setFixedSize(self.img_width_r, self.img_height_r) 
-            #     self.ROIWindow.label.setFixedSize(self.img_width_r, self.img_height_r)
-            # else:
-            #     self.ROIWindow.setFixedSize(200, 200)
-            #     self.ROIWindow.label.setFixedSize(self.img_width_r, self.img_height_r)
             self.ROIWindow.show()
+            self.ROIWindow.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
  
     def Show_histogram(self):
         if self.filename != "":
@@ -81,7 +83,7 @@ class MainWindow(QMainWindow):
         
         ccvImg = cv2.cvtColor(ccvImg, cv2.COLOR_BGR2RGB)
         qtImg = QImage(ccvImg.data, width, height, width * depth, QImage.Format_RGB888)
-        return QPixmap(qtImg), height, width, cvImg
+        return QPixmap(qtImg), cvImg
 
     def img_resize(self, image):
         height, width = image.shape[0], image.shape[1]
@@ -96,13 +98,15 @@ class MainWindow(QMainWindow):
         print("New_Height : %d, New_Width : %d" % (img_new.shape[0], img_new.shape[1]))
         return img_new
 
+
+    def closeEvent(self, event):
+        QApplication.closeAllWindows()
+
     def setup_control(self):
         self.filename = ""
         self.cImg_o = np.zeros((1,1,3), np.uint8)
         self.cImg_r = np.zeros((1,1,3), np.uint8)
         self.qImg = QPixmap("")
-        self.img_height_r = 0
-        self.img_width_r = 0
         self._window.OpenFile_action.triggered.connect(self.OpenFile)
         self._window.ROI_action.triggered.connect(self.ROI)
         self._window.Show_histogram_action.triggered.connect(self.Show_histogram)
@@ -166,6 +170,4 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    
- 
     sys.exit(app.exec_())

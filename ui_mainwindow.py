@@ -85,7 +85,7 @@ class Ui_MainWindow(QMainWindow):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"4A8G0039_OpenCV", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"4A8G0039", None))
         self.OpenFile_action.setText(QCoreApplication.translate("MainWindow", u"OpenFile", None))
 #if QT_CONFIG(shortcut)
         self.OpenFile_action.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+O", None))
