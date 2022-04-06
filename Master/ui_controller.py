@@ -10,7 +10,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from ui_mainwindow import Ui_MainWindow
 from ui_roiwindow import Ui_ROIWindow
-from ui_showhistogram import Ui_Showhistogram
+from ui_showhistogramwindow import Ui_ShowhistogramWinddow
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -50,15 +50,16 @@ class MainWindow(QMainWindow):
             
     def ROI(self):
         if self.filename != "":
-            ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
-            ROIWindow.show()
+            self.ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
+            self.ROIWindow.show()
             print('ROI')
             # ROIWindow.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
  
     def Show_histogram(self):
         if self.filename != "":
-            self.Showhistogram = Ui_Showhistogram(self.cImg_o)
+            self.Showhistogram = Ui_ShowhistogramWinddow(self.cImg_o)
             self.Showhistogram.show()
+            print('Showhistogram')
             # # 畫出 RGB 三種顏色的分佈圖
             # color=('b','g','r')
             # plt.style.use('dark_background')
@@ -69,9 +70,9 @@ class MainWindow(QMainWindow):
             # plt.show()
 
     def Show_change_color_space(self):
-        self.ShowChange_ColorSpaceWindow = Show_Change_Color_Space_Window()
-        self.ShowChange_ColorSpaceWindow.show()
-        print('Showhistogram')
+        # self.ShowChange_ColorSpaceWindow = Show_Change_Color_Space_Window()
+        # self.ShowChange_ColorSpaceWindow.show()
+        None
 
     # def cvImread(self, imgPath):
     #     cvImg=cv2.imdecode(np.fromfile(imgPath,dtype=np.uint8),-1)
@@ -119,56 +120,7 @@ class MainWindow(QMainWindow):
 
 
 
-class Show_Change_Color_Space_Window(QWidget):
-    def __init__(self):
-        super(Show_Change_Color_Space_Window, self).__init__()
-        self.setWindowTitle("Show_change_colorspace")
-        self.setFixedSize(700, 300)
-        self.qlayout = QGridLayout()
-        
-        self.qslider1 =  QSlider(Qt.Horizontal)
-        self.qslider1.setMinimum(0)  # 設定最小值
-        self.qslider1.setMaximum(255)  # 設定最大值
-        self.qslider1.setSingleStep(1)  # 步長
-        self.qslider1.setTickPosition(QSlider.NoTicks)
-        self.qlayout.addWidget(self.qslider1)
 
-        self.qslider2 =  QSlider(Qt.Horizontal)
-        self.qslider2.setMinimum(0)  # 設定最小值
-        self.qslider2.setMaximum(255)  # 設定最大值
-        self.qslider2.setSingleStep(1)  # 步長
-        self.qslider2.setTickPosition(QSlider.NoTicks)
-        self.qlayout.addWidget(self.qslider2)
-
-        self.qslider3 =  QSlider(Qt.Horizontal)
-        self.qslider3.setMinimum(0)  # 設定最小值
-        self.qslider3.setMaximum(255)  # 設定最大值
-        self.qslider3.setSingleStep(1)  # 步長
-        self.qslider3.setTickPosition(QSlider.NoTicks)
-        self.qlayout.addWidget(self.qslider3)
-
-        self.qslider4 =  QSlider(Qt.Horizontal)
-        self.qslider4.setMinimum(0)  # 設定最小值
-        self.qslider4.setMaximum(255)  # 設定最大值
-        self.qslider4.setSingleStep(1)  # 步長
-        self.qslider4.setTickPosition(QSlider.NoTicks)
-        self.qlayout.addWidget(self.qslider4)
-
-        self.qslider5 =  QSlider(Qt.Horizontal)
-        self.qslider5.setMinimum(0)  # 設定最小值
-        self.qslider5.setMaximum(255)  # 設定最大值
-        self.qslider5.setSingleStep(1)  # 步長
-        self.qslider5.setTickPosition(QSlider.NoTicks)
-        self.qlayout.addWidget(self.qslider5)
-
-        self.qslider6 =  QSlider(Qt.Horizontal)
-        self.qslider6.setMinimum(0)  # 設定最小值
-        self.qslider6.setMaximum(255)  # 設定最大值
-        self.qslider6.setSingleStep(1)  # 步長
-        self.qslider6.setTickPosition(QSlider.NoTicks)
-        self.qlayout.addWidget(self.qslider6)
-
-        self.setLayout(self.qlayout)
 
 
 if __name__ == "__main__":
