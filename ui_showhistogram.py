@@ -1,4 +1,3 @@
-import sys
 import cv2
 
 from PySide2.QtWidgets import *
@@ -25,13 +24,12 @@ class MplCanvas(FigureCanvasQTAgg):
         super(MplCanvas, self).__init__(fig)
 
 
-class MainWindow(QMainWindow):
-
-    def __init__(self, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+class Ui_Showhistogram(QWidget):
+    def __init__(self, cImg_o):
+        super(Ui_Showhistogram, self).__init__()
         self.setWindowTitle("Show_histogram")
         sc = MplCanvas(self)
-        self.cImg_o = cv2.imdecode(np.fromfile('IMG_4899.JPG',dtype=np.uint8),-1)
+        self.cImg_o = cImg_o
         color=('b','g','r')
         for i,col in enumerate(color):
                 hist = cv2.calcHist([self.cImg_o],[i],None,[256],[0,256])
@@ -45,14 +43,9 @@ class MainWindow(QMainWindow):
         layout.addWidget(toolbar)
         layout.addWidget(sc)
 
-        # Create a placeholder widget to hold our toolbar and canvas.
-        widget = QWidget()
-        widget.setLayout(layout)
-        self.setCentralWidget(widget)
+        self.setLayout(layout)
 
-        self.show()
-
-
-app = QApplication(sys.argv)
-w = MainWindow()
-app.exec_()
+# app = QApplication(sys.argv)
+# window = Ui_Showhistogram()
+# window.show()
+# sys.exit(app.exec_())

@@ -50,7 +50,7 @@ class Ui_ROIWindow(QWidget):
             else:
                 self.setFixedSize(300, 300)
 
-        self.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
+        # self.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
 
     def show_mouse_press(self, event):
         print(f"[show_mouse_press] {event.x()=}, {event.y()=}, {event.button()=}")

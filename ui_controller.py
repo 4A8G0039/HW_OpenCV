@@ -10,6 +10,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from ui_mainwindow import Ui_MainWindow
 from ui_roiwindow import Ui_ROIWindow
+from ui_showhistogram import Ui_Showhistogram
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,30 +44,34 @@ class MainWindow(QMainWindow):
                 else:
                     self._window.Img_Lable.setFixedSize(300, 300)
                     self.setFixedSize(300, 345)
-            print((QApplication.desktop().width() - self.width())/2, (QApplication.desktop().height() - self.height())/2)
-            self.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) - 20)
+            # print(QApplication.desktop().primaryScreen(), QApplication.desktop().screenGeometry(0))
+            # self.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) - 20)
             self._window.statusbar.showMessage(self.filename.split("/")[-1])
             
     def ROI(self):
         if self.filename != "":
-            self.ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
-            self.ROIWindow.show()
-            self.ROIWindow.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
+            ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
+            ROIWindow.show()
+            print('ROI')
+            # ROIWindow.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
  
     def Show_histogram(self):
         if self.filename != "":
-            # 畫出 RGB 三種顏色的分佈圖
-            color=('b','g','r')
-            plt.style.use('dark_background')
-            for i,col in enumerate(color):
-                hist=cv2.calcHist([self.cImg_o],[i],None,[256],[0,256])
-                plt.plot(hist,color=col)#(一維陣列,線顏色)
-                plt.xlim([0,256])#x範圍的值
-            plt.show()
+            self.Showhistogram = Ui_Showhistogram(self.cImg_o)
+            self.Showhistogram.show()
+            # # 畫出 RGB 三種顏色的分佈圖
+            # color=('b','g','r')
+            # plt.style.use('dark_background')
+            # for i,col in enumerate(color):
+            #     hist=cv2.calcHist([self.cImg_o],[i],None,[256],[0,256])
+            #     plt.plot(hist,color=col)#(一維陣列,線顏色)
+            #     plt.xlim([0,256])#x範圍的值
+            # plt.show()
 
     def Show_change_color_space(self):
         self.ShowChange_ColorSpaceWindow = Show_Change_Color_Space_Window()
         self.ShowChange_ColorSpaceWindow.show()
+        print('Showhistogram')
 
     # def cvImread(self, imgPath):
     #     cvImg=cv2.imdecode(np.fromfile(imgPath,dtype=np.uint8),-1)
