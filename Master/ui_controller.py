@@ -11,6 +11,7 @@ from PySide2.QtWidgets import *
 from ui_mainwindow import Ui_MainWindow
 from ui_roiwindow import Ui_ROIWindow
 from ui_showhistogramwindow import Ui_ShowhistogramWinddow
+from ui_changecolorspacewindow import Ui_ChangecolorspaceWindow
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -69,10 +70,9 @@ class MainWindow(QMainWindow):
             #     plt.xlim([0,256])#x範圍的值
             # plt.show()
 
-    def Show_change_color_space(self):
-        # self.ShowChange_ColorSpaceWindow = Show_Change_Color_Space_Window()
-        # self.ShowChange_ColorSpaceWindow.show()
-        None
+    def Change_color_space(self):
+        self.ChangeColorSpace = Ui_ChangecolorspaceWindow()
+        self.ChangeColorSpace.show()
 
     # def cvImread(self, imgPath):
     #     cvImg=cv2.imdecode(np.fromfile(imgPath,dtype=np.uint8),-1)
@@ -116,7 +116,7 @@ class MainWindow(QMainWindow):
         self._window.OpenFile_action.triggered.connect(self.OpenFile)
         self._window.ROI_action.triggered.connect(self.ROI)
         self._window.Show_histogram_action.triggered.connect(self.Show_histogram)
-        self._window.Show_change_colorspace_action.triggered.connect(self.Show_change_color_space)
+        self._window.Show_change_colorspace_action.triggered.connect(self.Change_color_space)
 
 
 
