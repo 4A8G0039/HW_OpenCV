@@ -10,7 +10,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from ui_mainwindow import Ui_MainWindow
 from ui_roiwindow import Ui_ROIWindow
-from ui_showhistogramwindow import Ui_ShowhistogramWinddow
+from ui_showhistogramwindow import Ui_ShowhistogramWindow
 from ui_changecolorspacewindow import Ui_ChangecolorspaceWindow
 
 import numpy as np
@@ -24,8 +24,11 @@ class MainWindow(QMainWindow):
         self._window.setupUi(self)
         self.setup_control()
 
-    def OpenFile(self):
-        self.filename, _ = QFileDialog.getOpenFileName(self, "OpenFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
+    def OpenFile(self, filename = ""):
+        if filename == False:
+            self.filename, _ = QFileDialog.getOpenFileName(self, "OpenFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
+        else:
+            self.filename = filename
         if self.filename != "":
             print("Open Path :", self.filename)
             self.cImg_o=cv2.imdecode(np.fromfile(self.filename,dtype=np.uint8),-1)
@@ -52,32 +55,44 @@ class MainWindow(QMainWindow):
     def ROI(self):
         if self.filename != "":
             self.ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
+            self.ROIWindow.closeEvent = self.ROI_closeEvent
             self.ROIWindow.show()
             print('ROI')
             # ROIWindow.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
- 
+
+    def ROI_closeEvent(self, event):
+        if self.ROIWindow.seaved:
+             self.OpenFile(self.ROIWindow.filename)
+        
+
     def Show_histogram(self):
         if self.filename != "":
-            self.Showhistogram = Ui_ShowhistogramWinddow(self.cImg_o)
+            self.Showhistogram = Ui_ShowhistogramWindow(self.cImg_o)
             self.Showhistogram.show()
             print('Showhistogram')
-            # # 畫出 RGB 三種顏色的分佈圖
-            # color=('b','g','r')
-            # plt.style.use('dark_background')
-            # for i,col in enumerate(color):
-            #     hist=cv2.calcHist([self.cImg_o],[i],None,[256],[0,256])
-            #     plt.plot(hist,color=col)#(一維陣列,線顏色)
-            #     plt.xlim([0,256])#x範圍的值
-            # plt.show()
-
+            
     def Change_color_space(self):
         self.ChangeColorSpace = Ui_ChangecolorspaceWindow()
+        self.ChangeColorSpace.u_r_Slider.valueChanged.connect(self.Img_Changed)
+        self.ChangeColorSpace.u_g_Slider.valueChanged.connect(self.Img_Changed)
+        self.ChangeColorSpace.u_b_Slider.valueChanged.connect(self.Img_Changed)
+        self.ChangeColorSpace.l_r_Slider.valueChanged.connect(self.Img_Changed)
+        self.ChangeColorSpace.l_g_Slider.valueChanged.connect(self.Img_Changed)
+        self.ChangeColorSpace.l_b_Slider.valueChanged.connect(self.Img_Changed)
         self.ChangeColorSpace.show()
 
-    # def cvImread(self, imgPath):
-    #     cvImg=cv2.imdecode(np.fromfile(imgPath,dtype=np.uint8),-1)
-    #     cvImg=cv2.cvtColor(cvImg,cv2.COLOR_RGB2BGR)
-    #     return cvImg
+    def Img_Changed(self):
+        CC = self.ChangeColorSpace
+        upper = np.array([CC.u_r_Slider.value(), CC.u_g_Slider.value(), CC.u_b_Slider.value()])
+        lower = np.array([CC.l_r_Slider.value(), CC.l_g_Slider.value(), CC.l_b_Slider.value()])
+        print(upper)
+        print(lower)
+        img = self.cImg_o.copy()
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        mask = cv2.inRange(hsv, lower, upper)
+        img = cv2.bitwise_and(img, img, mask = mask)
+        img, _ = self.cvimgTOqtimg(img)
+        self._window.Img_Lable.setPixmap(img)
 
 
     def cvimgTOqtimg(self, cvImg):
@@ -113,6 +128,7 @@ class MainWindow(QMainWindow):
         self.cImg_o = np.zeros((1,1,3), np.uint8)
         self.cImg_r = np.zeros((1,1,3), np.uint8)
         self.qImg = QPixmap("")
+        self.closeEvent = self.closeEvent
         self._window.OpenFile_action.triggered.connect(self.OpenFile)
         self._window.ROI_action.triggered.connect(self.ROI)
         self._window.Show_histogram_action.triggered.connect(self.Show_histogram)

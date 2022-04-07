@@ -24,9 +24,9 @@ class MplCanvas(FigureCanvasQTAgg):
         super(MplCanvas, self).__init__(fig)
 
 
-class Ui_ShowhistogramWinddow(QWidget):
+class Ui_ShowhistogramWindow(QWidget):
     def __init__(self, cImg_o):
-        super(Ui_ShowhistogramWinddow, self).__init__()
+        super(Ui_ShowhistogramWindow, self).__init__()
         self.setWindowTitle("Show_histogram")
         sc = MplCanvas(self)
         self.cImg_o = cImg_o

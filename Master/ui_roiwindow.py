@@ -13,12 +13,14 @@ class Ui_ROIWindow(QWidget):
         self.cRoi_o = cRoi_o
         self.cRoi_r = cRoi_r
         self.qRoi = qRoi
+        self.filename = ""
         self.x0 = 0
         self.y0 = 0
         self.x1 = 0
         self.y1 = 0
         self.flag = False
         self.seave = False
+        self.seaved = False
         self.label = QLabel(self)
         self.label.setFixedSize(300, 300)
         self.verticalLayout = QVBoxLayout()
@@ -102,9 +104,10 @@ class Ui_ROIWindow(QWidget):
 
             elif self.seave:
                 x = self.cRoi_o.shape[0] / self.cRoi_r.shape[0]
-                filename, _ = QFileDialog.getSaveFileName(self, "SaveFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
-                cv2.imencode('.png', self.cRoi_o[int(self.y0 * x): int(self.y1 * x), int(self.x0  * x): int(self.x1 * x)])[1].tofile(filename)
-                print("Save Path :", filename)
+                self.filename, _ = QFileDialog.getSaveFileName(self, "SaveFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
+                cv2.imencode('.png', self.cRoi_o[int(self.y0 * x): int(self.y1 * x), int(self.x0  * x): int(self.x1 * x)])[1].tofile(self.filename)
+                print("Save Path :", self.filename)
+                self.seaved = True
                 self.close()
 
         if self.seave and event.key() == Qt.Key_Delete or event.key() == Qt.Key_Backspace:

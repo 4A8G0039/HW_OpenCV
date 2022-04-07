@@ -30,8 +30,8 @@ class Ui_ChangecolorspaceWindow(QWidget):
         self.u_r_horizontalLayout.addWidget(self.u_r)
 
         self.u_r_Slider = QSlider()
-        self.u_r_Slider.setMaximum(250)
-        self.u_r_Slider.setValue(0)
+        self.u_r_Slider.setMaximum(255)
+        self.u_r_Slider.setValue(255)
         self.u_r_Slider.setOrientation(Qt.Horizontal)
         self.u_r_horizontalLayout.addWidget(self.u_r_Slider)
 
@@ -39,7 +39,7 @@ class Ui_ChangecolorspaceWindow(QWidget):
         sizePolicy.setHeightForWidth(self.u_r_v.sizePolicy().hasHeightForWidth())
         self.u_r_v.setSizePolicy(sizePolicy)
         self.u_r_v.setMinimumSize(QSize(20, 0))
-        self.u_r_v.setText("0")
+        self.u_r_v.setText("255")
         self.u_r_v.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.u_r_horizontalLayout.addWidget(self.u_r_v)
 
@@ -57,8 +57,8 @@ class Ui_ChangecolorspaceWindow(QWidget):
         self.u_g_horizontalLayout.addWidget(self.u_g)
 
         self.u_g_Slider = QSlider()
-        self.u_g_Slider.setMaximum(250)
-        self.u_g_Slider.setValue(0)
+        self.u_g_Slider.setMaximum(255)
+        self.u_g_Slider.setValue(255)
         self.u_g_Slider.setOrientation(Qt.Horizontal)
         self.u_g_horizontalLayout.addWidget(self.u_g_Slider)
 
@@ -66,7 +66,7 @@ class Ui_ChangecolorspaceWindow(QWidget):
         sizePolicy.setHeightForWidth(self.u_g_v.sizePolicy().hasHeightForWidth())
         self.u_g_v.setSizePolicy(sizePolicy)
         self.u_g_v.setMinimumSize(QSize(20, 0))
-        self.u_g_v.setText("0")
+        self.u_g_v.setText("255")
         self.u_g_v.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.u_g_horizontalLayout.addWidget(self.u_g_v)
 
@@ -84,8 +84,8 @@ class Ui_ChangecolorspaceWindow(QWidget):
         self.u_b_horizontalLayout.addWidget(self.u_b)
 
         self.u_b_Slider = QSlider()
-        self.u_b_Slider.setMaximum(250)
-        self.u_b_Slider.setValue(0)
+        self.u_b_Slider.setMaximum(255)
+        self.u_b_Slider.setValue(255)
         self.u_b_Slider.setOrientation(Qt.Horizontal)
         self.u_b_horizontalLayout.addWidget(self.u_b_Slider)
 
@@ -93,7 +93,7 @@ class Ui_ChangecolorspaceWindow(QWidget):
         sizePolicy.setHeightForWidth(self.u_b_v.sizePolicy().hasHeightForWidth())
         self.u_b_v.setSizePolicy(sizePolicy)
         self.u_b_v.setMinimumSize(QSize(20, 0))
-        self.u_b_v.setText("0")
+        self.u_b_v.setText("255")
         self.u_b_v.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.u_b_horizontalLayout.addWidget(self.u_b_v)
 
@@ -206,31 +206,18 @@ class Ui_ChangecolorspaceWindow(QWidget):
 
     def u_r_valueChanged(self):
         self.u_r_v.setText(f"{self.u_r_Slider.value()}")
-        print(self.u_r_Slider.value())
 
     def u_g_valueChanged(self):
         self.u_g_v.setText(f"{self.u_g_Slider.value()}")
-        print(self.u_g_Slider.value())
 
     def u_b_valueChanged(self):
         self.u_b_v.setText(f"{self.u_b_Slider.value()}")
-        print(self.u_b_Slider.value())
 
     def l_r_valueChanged(self):
         self.l_r_v.setText(f"{self.l_r_Slider.value()}")
-        print(self.l_r_Slider.value())
 
     def l_g_valueChanged(self):
         self.l_g_v.setText(f"{self.l_g_Slider.value()}")
-        print(self.l_g_Slider.value())
 
     def l_b_valueChanged(self):
         self.l_b_v.setText(f"{self.l_b_Slider.value()}")
-        print(self.l_b_Slider.value())
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = Ui_ChangecolorspaceWindow()
-    window.show()
-    sys.exit(app.exec_())
