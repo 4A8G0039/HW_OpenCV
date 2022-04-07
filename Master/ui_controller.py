@@ -11,7 +11,7 @@ from PySide2.QtWidgets import *
 from ui_mainwindow import Ui_MainWindow
 from ui_roiwindow import Ui_ROIWindow
 from ui_showhistogramwindow import Ui_ShowhistogramWindow
-from ui_changecolorspacewindow import Ui_ChangecolorspaceWindow
+from ui_changehsvwindow import Ui_ChangehsvWindow
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -71,29 +71,36 @@ class MainWindow(QMainWindow):
             self.Showhistogram.show()
             print('Showhistogram')
             
-    def Change_color_space(self):
-        self.ChangeColorSpace = Ui_ChangecolorspaceWindow()
-        self.ChangeColorSpace.u_r_Slider.valueChanged.connect(self.Img_Changed)
-        self.ChangeColorSpace.u_g_Slider.valueChanged.connect(self.Img_Changed)
-        self.ChangeColorSpace.u_b_Slider.valueChanged.connect(self.Img_Changed)
-        self.ChangeColorSpace.l_r_Slider.valueChanged.connect(self.Img_Changed)
-        self.ChangeColorSpace.l_g_Slider.valueChanged.connect(self.Img_Changed)
-        self.ChangeColorSpace.l_b_Slider.valueChanged.connect(self.Img_Changed)
-        self.ChangeColorSpace.show()
+    def Change_HSV(self):
+        if self.filename != "":
+            self.ChangeHSV = Ui_ChangehsvWindow()
+            self.ChangeHSV.u_h_Slider.valueChanged.connect(self.Img_Change_HSV)
+            self.ChangeHSV.u_s_Slider.valueChanged.connect(self.Img_Change_HSV)
+            self.ChangeHSV.u_v_Slider.valueChanged.connect(self.Img_Change_HSV)
+            self.ChangeHSV.l_h_Slider.valueChanged.connect(self.Img_Change_HSV)
+            self.ChangeHSV.l_s_Slider.valueChanged.connect(self.Img_Change_HSV)
+            self.ChangeHSV.l_v_Slider.valueChanged.connect(self.Img_Change_HSV)
+            self.ChangeHSV.closeEvent = self.Change_HSV_closeEvent
+            self.ChangeHSV.show()
 
-    def Img_Changed(self):
-        CC = self.ChangeColorSpace
-        upper = np.array([CC.u_r_Slider.value(), CC.u_g_Slider.value(), CC.u_b_Slider.value()])
-        lower = np.array([CC.l_r_Slider.value(), CC.l_g_Slider.value(), CC.l_b_Slider.value()])
+    def Img_Change_HSV(self):
+        CHSV = self.ChangeHSV
+        upper = np.array([CHSV.u_h_Slider.value(), CHSV.u_s_Slider.value(), CHSV.u_v_Slider.value()])
+        lower = np.array([CHSV.l_h_Slider.value(), CHSV.l_s_Slider.value(), CHSV.l_v_Slider.value()])
         print(upper)
         print(lower)
         img = self.cImg_o.copy()
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lower, upper)
-        img = cv2.bitwise_and(img, img, mask = mask)
-        img, _ = self.cvimgTOqtimg(img)
-        self._window.Img_Lable.setPixmap(img)
+        self.ChangeHSV.HCV_img = cv2.bitwise_and(img, img, mask = mask)
+        show_img, _ = self.cvimgTOqtimg(self.ChangeHSV.HCV_img)
+        self._window.Img_Lable.setPixmap(show_img)
 
+    def Change_HSV_closeEvent(self, event):
+        if self.ChangeHSV.seaved:
+            self.OpenFile(self.ChangeHSV.filename)
+        else:
+            self._window.Img_Lable.setPixmap(self.qImg)
 
     def cvimgTOqtimg(self, cvImg):
         print("Height : %d, Width : %d" % (cvImg.shape[0], cvImg.shape[1]))
@@ -132,7 +139,7 @@ class MainWindow(QMainWindow):
         self._window.OpenFile_action.triggered.connect(self.OpenFile)
         self._window.ROI_action.triggered.connect(self.ROI)
         self._window.Show_histogram_action.triggered.connect(self.Show_histogram)
-        self._window.Show_change_colorspace_action.triggered.connect(self.Change_color_space)
+        self._window.Change_HSV_action.triggered.connect(self.Change_HSV)
 
 
 
