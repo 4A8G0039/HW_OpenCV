@@ -85,7 +85,7 @@
      <x>0</x>
      <y>0</y>
      <width>600</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="File_menu">
@@ -100,11 +100,19 @@
     <property name="title">
      <string>Setting</string>
     </property>
+    <widget class="QMenu" name="menuImage_information">
+     <property name="title">
+      <string>Image information</string>
+     </property>
+     <addaction name="Show_histogram_action"/>
+     <addaction name="separator"/>
+     <addaction name="Img_size_action"/>
+    </widget>
     <addaction name="ROI_action"/>
     <addaction name="separator"/>
-    <addaction name="Show_histogram_action"/>
+    <addaction name="menuImage_information"/>
     <addaction name="separator"/>
-    <addaction name="Show_change_colorspace_action"/>
+    <addaction name="Change_colorspace_action"/>
    </widget>
    <widget class="QMenu" name="menuImage_Processing">
     <property name="title">
@@ -129,12 +137,7 @@
   </action>
   <action name="ROI_action">
    <property name="text">
-    <string>設定ROI</string>
-   </property>
-  </action>
-  <action name="Show_histogram_action">
-   <property name="text">
-    <string>顯示影像直方圖</string>
+    <string notr="true">ROI</string>
    </property>
   </action>
   <action name="action">
@@ -147,9 +150,9 @@
     <string>直方圖等化</string>
    </property>
   </action>
-  <action name="Show_change_colorspace_action">
+  <action name="Change_colorspace_action">
    <property name="text">
-    <string>顯示或改變色彩空間</string>
+    <string notr="true">color space</string>
    </property>
   </action>
   <action name="SaveFile_action">
@@ -158,6 +161,16 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="Show_histogram_action">
+   <property name="text">
+    <string notr="true">Show histogram</string>
+   </property>
+  </action>
+  <action name="Img_size_action">
+   <property name="text">
+    <string notr="true">Img size</string>
    </property>
   </action>
  </widget>

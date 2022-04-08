@@ -104,9 +104,7 @@ class Ui_ROIWindow(QWidget):
 
             elif self.seave:
                 x = self.cRoi_o.shape[0] / self.cRoi_r.shape[0]
-                self.filename, _ = QFileDialog.getSaveFileName(self, "SaveFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
-                cv2.imencode('.png', self.cRoi_o[int(self.y0 * x): int(self.y1 * x), int(self.x0  * x): int(self.x1 * x)])[1].tofile(self.filename)
-                print("Save Path :", self.filename)
+                self.cRoi_o = self.cRoi_o[int(self.y0 * x): int(self.y1 * x), int(self.x0  * x): int(self.x1 * x)]                
                 self.seaved = True
                 self.close()
 

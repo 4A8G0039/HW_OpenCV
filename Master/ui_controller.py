@@ -24,34 +24,26 @@ class MainWindow(QMainWindow):
         self._window.setupUi(self)
         self.setup_control()
 
-    def OpenFile(self, filename = ""):
-        if filename == False:
-            self.filename, _ = QFileDialog.getOpenFileName(self, "OpenFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
-        else:
+    def OpenFile(self):
+        filename, _ = QFileDialog.getOpenFileName(self, "OpenFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
+        if filename != "":
             self.filename = filename
-        if self.filename != "":
             print("Open Path :", self.filename)
             self.cImg_o=cv2.imdecode(np.fromfile(self.filename,dtype=np.uint8),-1)
-            self.qImg, self.cImg_r = self.cvimgTOqtimg(self.cImg_o)
-            self._window.Img_Lable.setPixmap(self.qImg)
-            if self.qImg.size().width() >= 300:
-                if self.qImg.size().height() >= 300:
-                    self._window.Img_Lable.setFixedSize(self.qImg.size().width(), self.qImg.size().height())
-                    self.setFixedSize(self.qImg.size().width(), self.qImg.size().height() + 45)
-                else:
-                    self._window.Img_Lable.setFixedSize(self.qImg.size().width(), 300)
-                    self.setFixedSize(self.qImg.size().width(), 345)
-            else:
-                if self.qImg.size().height() >= 300:
-                    self._window.Img_Lable.setFixedSize(300, self.qImg.size().height())
-                    self.setFixedSize(300, self.qImg.size().height() + 45)
-                else:
-                    self._window.Img_Lable.setFixedSize(300, 300)
-                    self.setFixedSize(300, 345)
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
+            self.show_img()
+            self._window.statusbar.showMessage(self.filename.split("/")[-1])
             # print(QApplication.desktop().primaryScreen(), QApplication.desktop().screenGeometry(0))
             # self.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) - 20)
-            self._window.statusbar.showMessage(self.filename.split("/")[-1])
             
+    def SaveFile(self):
+        if self.filename != "":
+            filename, _ = QFileDialog.getSaveFileName(self, "SaveFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
+            if filename != "":
+                cv2.imencode('.png', self.cImg_o)[1].tofile(filename)
+                print("Save Path :", filename)
+
+
     def ROI(self):
         if self.filename != "":
             self.ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
@@ -62,7 +54,9 @@ class MainWindow(QMainWindow):
 
     def ROI_closeEvent(self, event):
         if self.ROIWindow.seaved:
-             self.OpenFile(self.ROIWindow.filename)
+            self.cImg_o = self.ROIWindow.cRoi_o
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
+            self.show_img()
         
 
     def Show_histogram(self):
@@ -93,25 +87,57 @@ class MainWindow(QMainWindow):
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lower, upper)
         self.ChangeHSV.HCV_img = cv2.bitwise_and(img, img, mask = mask)
-        show_img, _ = self.cvimgTOqtimg(self.ChangeHSV.HCV_img)
+        show_img, _, _ = self.cvimgTOqtimg(self.ChangeHSV.HCV_img)
         self._window.Img_Lable.setPixmap(show_img)
 
     def Change_HSV_closeEvent(self, event):
         if self.ChangeHSV.seaved:
-            self.OpenFile(self.ChangeHSV.filename)
+            self.cImg_o = self.ChangeHSV.HCV_img
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
+            self.show_img()
         else:
-            self._window.Img_Lable.setPixmap(self.qImg)
+            self.show_img()
 
-    def cvimgTOqtimg(self, cvImg):
+    def Change_RAY(self):
+        self.qImg, self.cImg_r, self.cImg_o = self.cvimgTOqtimg(self.cImg_o, color = "GRAY")
+        self.show_img()
+
+
+    def show_img(self):
+        self._window.Img_Lable.setPixmap(self.qImg)
+        if self.qImg.size().width() >= 300:
+            if self.qImg.size().height() >= 300:
+                self._window.Img_Lable.setFixedSize(self.qImg.size().width(), self.qImg.size().height())
+                self.setFixedSize(self.qImg.size().width(), self.qImg.size().height() + 45)
+            else:
+                self._window.Img_Lable.setFixedSize(self.qImg.size().width(), 300)
+                self.setFixedSize(self.qImg.size().width(), 345)
+        else:
+            if self.qImg.size().height() >= 300:
+                self._window.Img_Lable.setFixedSize(300, self.qImg.size().height())
+                self.setFixedSize(300, self.qImg.size().height() + 45)
+            else:
+                self._window.Img_Lable.setFixedSize(300, 300)
+                self.setFixedSize(300, 345)
+
+    def cvimgTOqtimg(self, cvImg, color = "RGB"):
         print("Height : %d, Width : %d" % (cvImg.shape[0], cvImg.shape[1]))
+        ocvImg = cvImg.copy()
         if cvImg.shape[0] >960 or cvImg.shape[1] > 1440:
             cvImg = self.img_resize(cvImg)
-        ccvImg = cvImg.copy()
-        height, width, depth = ccvImg.shape
-        
-        ccvImg = cv2.cvtColor(ccvImg, cv2.COLOR_BGR2RGB)
-        qtImg = QImage(ccvImg.data, width, height, width * depth, QImage.Format_RGB888)
-        return QPixmap(qtImg), cvImg
+        if color == "RGB":
+            ccvImg = cvImg.copy()
+            height, width, depth = ccvImg.shape
+            ccvImg = cv2.cvtColor(ccvImg, cv2.COLOR_BGR2RGB)
+            qtImg = QImage(ccvImg.data, width, height, width * depth, QImage.Format_RGB888)
+        elif color == "GRAY":
+            ocvImg = cv2.cvtColor(ocvImg, cv2.COLOR_BGR2GRAY)
+            ocvImg = cv2.cvtColor(ocvImg, cv2.COLOR_GRAY2BGR)
+            cvImg = cv2.cvtColor(cvImg, cv2.COLOR_BGR2GRAY)
+            cvImg = cv2.cvtColor(cvImg, cv2.COLOR_GRAY2BGR)
+            height, width, depth = cvImg.shape
+            qtImg = QImage(cvImg.data, width, height, width * depth, QImage.Format_RGB888)
+        return QPixmap(qtImg), cvImg, ocvImg
 
     def img_resize(self, image):
         height, width = image.shape[0], image.shape[1]
@@ -137,9 +163,11 @@ class MainWindow(QMainWindow):
         self.qImg = QPixmap("")
         self.closeEvent = self.closeEvent
         self._window.OpenFile_action.triggered.connect(self.OpenFile)
+        self._window.SaveFile_action.triggered.connect(self.SaveFile)
         self._window.ROI_action.triggered.connect(self.ROI)
         self._window.Show_histogram_action.triggered.connect(self.Show_histogram)
         self._window.Change_HSV_action.triggered.connect(self.Change_HSV)
+        self._window.Change_RAY_action.triggered.connect(self.Change_RAY)
 
 
 

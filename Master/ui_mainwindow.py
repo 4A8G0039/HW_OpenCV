@@ -11,14 +11,13 @@ class Ui_MainWindow(QMainWindow):
     #     self.setupUi(self)
 
     def setupUi(self, MainWindow):
-        MainWindow.setFixedSize(300, 300)
-        MainWindow.setWindowTitle("4A8G0039")
-        self.centralwidget = QWidget(MainWindow)
-        self.verticalLayout = QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+        MainWindow.setFixedSize(300, 300) #設定視窗大小
+        MainWindow.setWindowTitle("4A8G0039") #設定視窗標題
+        self.centralwidget = QWidget(MainWindow) #設定視窗centralwidget為QWidget
+        self.verticalLayout = QVBoxLayout(self.centralwidget) #設定視窗centralwidget為垂直Layout
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0) #設定Layout的邊距
 
-        self.Img_Lable = QLabel(self.centralwidget)
+        self.Img_Lable = QLabel(self.centralwidget) #
         self.Img_Lable.setEnabled(True)
         self.Img_Lable.setMinimumSize(QSize(0, 0))
         self.Img_Lable.setAlignment(Qt.AlignCenter)
@@ -51,17 +50,35 @@ class Ui_MainWindow(QMainWindow):
         self.ROI_action.setText("ROI")
         self.Setting_menu.addAction(self.ROI_action)
         self.Setting_menu.addSeparator()
+
+
+        self.Image_information = QMenu(self.Setting_menu)
+        self.Image_information.setTitle("Image_information")
+
         self.Show_histogram_action = QAction(MainWindow)
         self.Show_histogram_action.setText("Show histogram")
-        self.Setting_menu.addAction(self.Show_histogram_action)
+        self.Image_information.addAction(self.Show_histogram_action)
+        self.Show_imgsize_action = QAction(MainWindow)
+        self.Show_imgsize_action.setText("Show_imgsize_action")
+        self.Image_information.addAction(self.Show_imgsize_action)
+
+        self.Setting_menu.addAction(self.Image_information.menuAction())
+
+
         self.Setting_menu.addSeparator()
         self.Change_HSV_action = QAction(MainWindow)
         self.Change_HSV_action.setText("Change HSV")
         self.Setting_menu.addAction(self.Change_HSV_action)
+        self.Setting_menu.addSeparator()
+        self.Change_RAY_action = QAction(MainWindow)
+        self.Change_RAY_action.setText("Change RAY")
+        self.Setting_menu.addAction(self.Change_RAY_action)
 
         self.Image_Processing_menu = QMenu(self.Top_menubar)
         self.Image_Processing_menu.setTitle("Image Processing")
         self.Top_menubar.addAction(self.Image_Processing_menu.menuAction())
+
+
         self.action = QAction(MainWindow)
         self.Image_Processing_menu.addAction(self.action)
         self.Image_Processing_menu.addSeparator()
@@ -73,12 +90,6 @@ class Ui_MainWindow(QMainWindow):
         self.statusbar = QStatusBar(MainWindow)
         MainWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
-
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
-
-    def retranslateUi(self, MainWindow):
-        self.action.setText(QCoreApplication.translate("MainWindow", u"\u5f71\u50cf\u4e8c\u503c\u5316", None))
-        self.action_3.setText(QCoreApplication.translate("MainWindow", u"\u76f4\u65b9\u5716\u7b49\u5316", None))
         

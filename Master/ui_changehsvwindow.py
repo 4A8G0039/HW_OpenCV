@@ -231,7 +231,5 @@ class Ui_ChangehsvWindow(QWidget):
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
                 if self.u_h_Slider.value() != 0 or self.u_s_Slider.value() != 0 or self.u_v_Slider.value() != 0 or\
                         self.l_h_Slider.value() != 0 or self.l_s_Slider.value() != 0 or self.l_v_Slider.value() != 0:
-                        self.filename, _ = QFileDialog.getSaveFileName(self, "SaveFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
-                        cv2.imencode('.png', self.HCV_img)[1].tofile(self.filename)
                         self.seaved = True
                         self.close()
