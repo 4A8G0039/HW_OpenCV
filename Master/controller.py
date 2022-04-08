@@ -121,14 +121,17 @@ class MainWindow(QMainWindow):
             self.Statusbar_Message("No Image")
 
     def Image_Thresholding(self):
-        self.Imagethresholding = Ui_ImagethresholdingWindow()
-        self.Imagethresholding.closeEvent = self.Image_Thresholding_closeEvent
-        self.Imagethresholding.threshold_Slider.valueChanged.connect(self.Img_Image_Thresholding)
-        self.Imagethresholding.maximum_Slider.valueChanged.connect(self.Img_Image_Thresholding)
-        self.Imagethresholding.show()
-        _, self.Imagethresholding.Imagethresholding_img = cv2.threshold(self.cImg_o, 127, 255, cv2.THRESH_BINARY)
-        show_img, _, _ = self.cvimgTOqtimg(self.Imagethresholding.Imagethresholding_img)
-        self._window.Img_Lable.setPixmap(show_img)
+        if self.filename != "":
+            self.Imagethresholding = Ui_ImagethresholdingWindow()
+            self.Imagethresholding.closeEvent = self.Image_Thresholding_closeEvent
+            self.Imagethresholding.threshold_Slider.valueChanged.connect(self.Img_Image_Thresholding)
+            self.Imagethresholding.maximum_Slider.valueChanged.connect(self.Img_Image_Thresholding)
+            self.Imagethresholding.show()
+            _, self.Imagethresholding.Imagethresholding_img = cv2.threshold(self.cImg_o, 127, 255, cv2.THRESH_BINARY)
+            show_img, _, _ = self.cvimgTOqtimg(self.Imagethresholding.Imagethresholding_img)
+            self._window.Img_Lable.setPixmap(show_img)
+        else:
+            self.Statusbar_Message("No Image")
 
     def Img_Image_Thresholding(self):
         Threshold_value = self.Imagethresholding.threshold_Slider.value()
