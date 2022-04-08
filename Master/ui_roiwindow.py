@@ -100,11 +100,10 @@ class Ui_ROIWindow(QWidget):
                 self.label.mouseMoveEvent = None
                 self.show_img(self.cvimgTOqtimg(self.cRoi_r[self.y0 : self.y1, self.x0 : self.x1]))
                 self.seave = True
-                print("Height : %d, Width : %d" % (self.y1 - self.y0, self.x1 - self.x0))
 
             elif self.seave:
                 x = self.cRoi_o.shape[0] / self.cRoi_r.shape[0]
-                self.cRoi_o = self.cRoi_o[int(self.y0 * x): int(self.y1 * x), int(self.x0  * x): int(self.x1 * x)]                
+                self.cRoi_o = self.cRoi_o[int(self.y0 * x): int(self.y1 * x), int(self.x0  * x): int(self.x1 * x)]
                 self.seaved = True
                 self.close()
 

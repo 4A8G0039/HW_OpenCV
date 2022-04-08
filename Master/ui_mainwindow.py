@@ -13,26 +13,22 @@ class Ui_MainWindow(QMainWindow):
     def setupUi(self, MainWindow):
         MainWindow.setFixedSize(300, 300) #設定視窗大小
         MainWindow.setWindowTitle("4A8G0039") #設定視窗標題
-        self.centralwidget = QWidget(MainWindow) #設定視窗centralwidget為QWidget
-        self.verticalLayout = QVBoxLayout(self.centralwidget) #設定視窗centralwidget為垂直Layout
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0) #設定Layout的邊距
-
-        self.Img_Lable = QLabel(self.centralwidget) #
-        self.Img_Lable.setEnabled(True)
-        self.Img_Lable.setMinimumSize(QSize(0, 0))
-        self.Img_Lable.setAlignment(Qt.AlignCenter)
-
-        MainWindow.setCentralWidget(self.centralwidget)
-        self.verticalLayout.addWidget(self.Img_Lable, 0, Qt.AlignHCenter|Qt.AlignVCenter)
-
-
-
-        self.Top_menubar = QMenuBar(MainWindow)
-        self.Top_menubar.setGeometry(QRect(0, 0, 600, 25))
-
+    #CentralWidget#
+        self.centralwidget = QWidget(MainWindow) #新增一個QWidget命名為centralwidget
+        self.verticalLayout = QHBoxLayout(self.centralwidget) #設定centralwidget為水平Layout並命名為verticalLayout
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0) #設定verticalLayout的邊距
+        self.Img_Lable = QLabel(self.centralwidget) #新增一個QLabel命名為Img_Lable
+        self.Img_Lable.setMinimumSize(QSize(0, 0)) #設定QLabel的最小尺寸
+        self.Img_Lable.setAlignment(Qt.AlignCenter) #設定QLabel裡的物件置中
+        self.verticalLayout.addWidget(self.Img_Lable, 0, Qt.AlignHCenter|Qt.AlignVCenter) #把Img_Lable加進verticalLayout並設為水平置中，垂直置中
+        MainWindow.setCentralWidget(self.centralwidget) #將主視窗的CentralWidget設為centralwidget
+    #CentralWidget#
+    #MenuBar#
+        self.Top_menubar = QMenuBar(MainWindow) #新增一個QMenuBar命名為Top_menubar
+        self.Top_menubar.setGeometry(QRect(0, 0, 600, 25)) #設定Top_menubar的尺寸
+    #File_menu
         self.File_menu = QMenu(self.Top_menubar)
         self.File_menu.setTitle("File")
-        self.Top_menubar.addAction(self.File_menu.menuAction())
         self.OpenFile_action = QAction(MainWindow)
         self.OpenFile_action.setText("OpenFile")
         self.OpenFile_action.setShortcut("Ctrl+O")
@@ -42,54 +38,50 @@ class Ui_MainWindow(QMainWindow):
         self.SaveFile_action.setText("SaveFile")
         self.SaveFile_action.setShortcut("Ctrl+S")
         self.File_menu.addAction(self.SaveFile_action)
-
+        self.Top_menubar.addAction(self.File_menu.menuAction())
+    #File_menu
+    #Setting_menu
         self.Setting_menu = QMenu(self.Top_menubar)
         self.Setting_menu.setTitle("Setting")
-        self.Top_menubar.addAction(self.Setting_menu.menuAction())
         self.ROI_action = QAction(MainWindow)
         self.ROI_action.setText("ROI")
         self.Setting_menu.addAction(self.ROI_action)
         self.Setting_menu.addSeparator()
 
-
-        self.Image_information = QMenu(self.Setting_menu)
-        self.Image_information.setTitle("Image_information")
-
+        self.Image_information_menu = QMenu(self.Setting_menu)
+        self.Image_information_menu.setTitle("Image information")
         self.Show_histogram_action = QAction(MainWindow)
-        self.Show_histogram_action.setText("Show histogram")
-        self.Image_information.addAction(self.Show_histogram_action)
+        self.Show_histogram_action.setText("Histogram")
+        self.Image_information_menu.addAction(self.Show_histogram_action)
         self.Show_imgsize_action = QAction(MainWindow)
-        self.Show_imgsize_action.setText("Show_imgsize_action")
-        self.Image_information.addAction(self.Show_imgsize_action)
-
-        self.Setting_menu.addAction(self.Image_information.menuAction())
-
+        self.Show_imgsize_action.setText("Image Size")
+        self.Image_information_menu.addAction(self.Show_imgsize_action)
+        self.Setting_menu.addAction(self.Image_information_menu.menuAction())
 
         self.Setting_menu.addSeparator()
+        self.Change_colorspace_menu = QMenu(self.Setting_menu)
+        self.Change_colorspace_menu.setTitle("Change colorspace")
         self.Change_HSV_action = QAction(MainWindow)
-        self.Change_HSV_action.setText("Change HSV")
-        self.Setting_menu.addAction(self.Change_HSV_action)
-        self.Setting_menu.addSeparator()
-        self.Change_RAY_action = QAction(MainWindow)
-        self.Change_RAY_action.setText("Change RAY")
-        self.Setting_menu.addAction(self.Change_RAY_action)
+        self.Change_HSV_action.setText("HSV")
+        self.Change_colorspace_menu.addAction(self.Change_HSV_action)
+        self.Change_GRAY_action = QAction(MainWindow)
+        self.Change_GRAY_action.setText("GRAY")
+        self.Change_colorspace_menu.addAction(self.Change_GRAY_action)
+        self.Setting_menu.addAction(self.Change_colorspace_menu.menuAction())
 
+        self.Top_menubar.addAction(self.Setting_menu.menuAction())
+    #Setting_menu
+    #Image_Processing_menu
         self.Image_Processing_menu = QMenu(self.Top_menubar)
         self.Image_Processing_menu.setTitle("Image Processing")
+
         self.Top_menubar.addAction(self.Image_Processing_menu.menuAction())
-
-
-        self.action = QAction(MainWindow)
-        self.Image_Processing_menu.addAction(self.action)
-        self.Image_Processing_menu.addSeparator()
-        self.action_3 = QAction(MainWindow)
-        self.Image_Processing_menu.addAction(self.action_3)
-
+    #Image_Processing_menu
         MainWindow.setMenuBar(self.Top_menubar)
-
+    #MenuBar#
+    #StatusBar#
         self.statusbar = QStatusBar(MainWindow)
         MainWindow.setStatusBar(self.statusbar)
-
+    #StatusBar#
         QMetaObject.connectSlotsByName(MainWindow)
-    # setupUi
         

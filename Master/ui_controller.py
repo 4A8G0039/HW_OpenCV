@@ -59,7 +59,7 @@ class MainWindow(QMainWindow):
             self.show_img()
         
 
-    def Show_histogram(self):
+    def Show_Histogram(self):
         if self.filename != "":
             self.Showhistogram = Ui_ShowhistogramWindow(self.cImg_o)
             self.Showhistogram.show()
@@ -98,9 +98,18 @@ class MainWindow(QMainWindow):
         else:
             self.show_img()
 
-    def Change_RAY(self):
-        self.qImg, self.cImg_r, self.cImg_o = self.cvimgTOqtimg(self.cImg_o, color = "GRAY")
-        self.show_img()
+    def Change_GRAY(self):
+        if self.filename != "":
+            self.qImg, self.cImg_r, self.cImg_o = self.cvimgTOqtimg(self.cImg_o, color = "GRAY")
+            self.show_img()
+
+    def Show_Imgsize(self):
+        if self.filename != "":
+            information = f'Original :\n\tHeight : {self.cImg_o.shape[0]}\n\tWidth  : {self.cImg_o.shape[1]}\n'
+            information += f'Show :\n\tHeight : {self.cImg_r.shape[0]}\n\tWidth  : {self.cImg_r.shape[1]}'
+            QMessageBox.information(self, 'Image Size', information)
+
+
 
 
     def show_img(self):
@@ -121,7 +130,7 @@ class MainWindow(QMainWindow):
                 self.setFixedSize(300, 345)
 
     def cvimgTOqtimg(self, cvImg, color = "RGB"):
-        print("Height : %d, Width : %d" % (cvImg.shape[0], cvImg.shape[1]))
+        print(f'Height : {cvImg.shape[0]}, Width : {cvImg.shape[1]}')
         ocvImg = cvImg.copy()
         if cvImg.shape[0] >960 or cvImg.shape[1] > 1440:
             cvImg = self.img_resize(cvImg)
@@ -149,7 +158,7 @@ class MainWindow(QMainWindow):
             img_new = cv2.resize(image, (width_new, int(height * width_new / width + 0.5)))
         else:
             img_new = cv2.resize(image, (int(width * height_new / height + 0.5), height_new))
-        print("New_Height : %d, New_Width : %d" % (img_new.shape[0], img_new.shape[1]))
+        print(f'Show_Height : {img_new.shape[0]}, Show_Width : {img_new.shape[1]}')
         return img_new
 
 
@@ -165,9 +174,10 @@ class MainWindow(QMainWindow):
         self._window.OpenFile_action.triggered.connect(self.OpenFile)
         self._window.SaveFile_action.triggered.connect(self.SaveFile)
         self._window.ROI_action.triggered.connect(self.ROI)
-        self._window.Show_histogram_action.triggered.connect(self.Show_histogram)
+        self._window.Show_histogram_action.triggered.connect(self.Show_Histogram)
+        self._window.Show_imgsize_action.triggered.connect(self.Show_Imgsize)
         self._window.Change_HSV_action.triggered.connect(self.Change_HSV)
-        self._window.Change_RAY_action.triggered.connect(self.Change_RAY)
+        self._window.Change_GRAY_action.triggered.connect(self.Change_GRAY)
 
 
 
