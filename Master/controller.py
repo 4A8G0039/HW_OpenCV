@@ -148,6 +148,23 @@ class MainWindow(QMainWindow):
         else:
             self.show_img()
 
+    def Histogram_Equalization(self):
+        if self.filename != "":
+            ycrcb = cv2.cvtColor(self.cImg_o, cv2.COLOR_BGR2YCR_CB)
+            channels = cv2.split(ycrcb)
+            cv2.equalizeHist(channels[0], channels[0])
+            cv2.merge(channels, ycrcb)
+            self.cImg_o = cv2.cvtColor(ycrcb, cv2.COLOR_YCR_CB2BGR, self.cImg_o)
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
+            self.show_img()
+        else:
+            self.Statusbar_Message("No Image")
+
+
+
+
+
+
     def show_img(self):
         self._window.Img_Lable.setPixmap(self.qImg)
         if self.qImg.size().width() >= 300:
@@ -217,6 +234,7 @@ class MainWindow(QMainWindow):
         self._window.Change_HSV_action.triggered.connect(self.Change_HSV)
         self._window.Change_GRAY_action.triggered.connect(self.Change_GRAY)
         self._window.Image_Thresholding_action.triggered.connect(self.Image_Thresholding)
+        self._window.Histogram_Equalization_action.triggered.connect(self.Histogram_Equalization)
 
 
 
