@@ -8,12 +8,12 @@ import numpy as np
 class Ui_ROIWindow(QWidget):
     def __init__(self, cRoi_o, cRoi_r, qRoi):
         super(Ui_ROIWindow, self).__init__()
+        self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle("ROI")
         self.setFixedSize(300, 300)
         self.cRoi_o = cRoi_o
         self.cRoi_r = cRoi_r
         self.qRoi = qRoi
-        self.filename = ""
         self.x0 = 0
         self.y0 = 0
         self.x1 = 0

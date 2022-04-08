@@ -27,6 +27,7 @@ class MplCanvas(FigureCanvasQTAgg):
 class Ui_ShowhistogramWindow(QWidget):
     def __init__(self, cImg_o):
         super(Ui_ShowhistogramWindow, self).__init__()
+        self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle("Show_histogram")
         sc = MplCanvas(self)
         self.cImg_o = cImg_o

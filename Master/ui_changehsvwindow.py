@@ -1,3 +1,4 @@
+import sys
 import cv2
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -8,10 +9,10 @@ import numpy as np
 class Ui_ChangehsvWindow(QWidget):
     def __init__(self):
         super(Ui_ChangehsvWindow, self).__init__()
-        self.setWindowTitle(u"Change_colorspace")
+        self.setWindowModality(Qt.ApplicationModal)
+        self.setWindowTitle(u"HSV")
         self.setFixedSize(700, 300)
         self.seaved = False
-        self.filename = ""
         self.HCV_img = np.zeros((1,1,3), np.uint8)
         self.main_verticalLayout = QVBoxLayout()
 
@@ -229,7 +230,13 @@ class Ui_ChangehsvWindow(QWidget):
 
     def key_Press_Event(self, event):
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
-                if self.u_h_Slider.value() != 0 or self.u_s_Slider.value() != 0 or self.u_v_Slider.value() != 0 or\
+                if self.u_h_Slider.value() != 255 or self.u_s_Slider.value() != 255 or self.u_v_Slider.value() != 255 or\
                         self.l_h_Slider.value() != 0 or self.l_s_Slider.value() != 0 or self.l_v_Slider.value() != 0:
                         self.seaved = True
                         self.close()
+
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)
+#     window = Ui_ChangehsvWindow()
+#     window.show()
+#     sys.exit(app.exec_())
