@@ -6,11 +6,11 @@ from scipy.spatial import distance as dist
 import numpy as np
 
 
-class Ui_PerspectivetransformWindow(QWidget):
+class Ui_Perspective_Transform_Window(QWidget):
     def __init__(self, cRoi_o, cRoi_r, qRoi):
-        super(Ui_PerspectivetransformWindow, self).__init__()
+        super(Ui_Perspective_Transform_Window, self).__init__()
         self.setWindowModality(Qt.ApplicationModal)
-        self.setWindowTitle("Perspective Transform")
+        self.setWindowTitle("Perspective Transform (透視投影轉換)")
         self.setFixedSize(300, 300)
         self.cRoi_o = cRoi_o
         self.cRoi_r = cRoi_r
@@ -139,7 +139,8 @@ class Ui_PerspectivetransformWindow(QWidget):
                 self.seave = True
 
             elif self.seave:
-                self.cRoi_o = self.four_point_transform(self.cRoi_r, np.array(self.pts))
+                x = self.cRoi_o.shape[0] / self.cRoi_r.shape[0]
+                self.cRoi_o = self.four_point_transform(self.cRoi_o, np.array(self.pts) * x)
                 self.seaved = True
                 self.close()
 

@@ -6,12 +6,13 @@ import cv2
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
-from ui_mainwindow import Ui_MainWindow
-from ui_roiwindow import Ui_ROIWindow
-from ui_showhistogramwindow import Ui_ShowhistogramWindow
-from ui_changehsvwindow import Ui_ChangehsvWindow
-from ui_imagethresholdingwindow import Ui_ImagethresholdingWindow
-from ui_perspectivetransformwindow import Ui_PerspectivetransformWindow
+from ui_main_window import Ui_Main_Window
+from ui_roi_window import Ui_ROI_Window
+from ui_show_histogram_window import Ui_Show_Histogram_Window
+from ui_change_hsv_window import Ui_Change_Hsv_Window
+from ui_image_thresholding_window import Ui_Image_Thresholding_Window
+from ui_perspective_transform_window import Ui_Perspective_Transform_Window
+from ui_translate_rotate_window import Ui_Translate_Rotate_Window
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -20,7 +21,7 @@ import matplotlib.pyplot as plt
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
-        self._window = Ui_MainWindow()
+        self._window = Ui_Main_Window()
         self._window.setupUi(self)
         self.setup_control()
 
@@ -48,7 +49,7 @@ class MainWindow(QMainWindow):
     def ROI(self):
         if self.filename != "":
             print('ROI')
-            self.ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
+            self.ROIWindow = Ui_ROI_Window(self.cImg_o, self.cImg_r, self.qImg)
             self.ROIWindow.closeEvent = self.ROI_closeEvent
             self.ROIWindow.show()
             # ROIWindow.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
@@ -64,7 +65,7 @@ class MainWindow(QMainWindow):
     def Show_Histogram(self):
         if self.filename != "":
             print('Show Histogram')
-            self.Showhistogram = Ui_ShowhistogramWindow(self.cImg_o)
+            self.Showhistogram = Ui_Show_Histogram_Window(self.cImg_o)
             self.Showhistogram.show()
         else:
             self.Statusbar_Message("No Image")
@@ -72,7 +73,7 @@ class MainWindow(QMainWindow):
     def Change_HSV(self):
         if self.filename != "":
             print("Change HSV")
-            self.ChangeHSV = Ui_ChangehsvWindow()
+            self.ChangeHSV = Ui_Change_Hsv_Window()
             self.ChangeHSV.u_h_Slider.valueChanged.connect(self.Img_Change_HSV)
             self.ChangeHSV.u_s_Slider.valueChanged.connect(self.Img_Change_HSV)
             self.ChangeHSV.u_v_Slider.valueChanged.connect(self.Img_Change_HSV)
@@ -123,7 +124,7 @@ class MainWindow(QMainWindow):
     def Image_Thresholding(self):
         if self.filename != "":
             print("Image Thresholding")
-            self.Imagethresholding = Ui_ImagethresholdingWindow()
+            self.Imagethresholding = Ui_Image_Thresholding_Window()
             self.Imagethresholding.closeEvent = self.Image_Thresholding_closeEvent
             self.Imagethresholding.threshold_Slider.valueChanged.connect(self.Img_Image_Thresholding)
             self.Imagethresholding.maximum_Slider.valueChanged.connect(self.Img_Image_Thresholding)
@@ -165,7 +166,7 @@ class MainWindow(QMainWindow):
     def Perspective_Transform(self):
         if self.filename != "":
             print("Perspective Transform")
-            self.PerspectivetransformWindow = Ui_PerspectivetransformWindow(self.cImg_o, self.cImg_r, self.qImg)
+            self.PerspectivetransformWindow = Ui_Perspective_Transform_Window(self.cImg_o, self.cImg_r, self.qImg)
             self.PerspectivetransformWindow.closeEvent = self.Perspective_Transform_closeEvent
             self.PerspectivetransformWindow.show()
         else:
@@ -177,6 +178,48 @@ class MainWindow(QMainWindow):
             self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
             self.show_img()
 
+    def Translate_Rotate(self):
+        if self.filename != "":
+            self.Translaterotate = Ui_Translate_Rotate_Window(self.cImg_o.shape[1] + 0.5,self.cImg_o.shape[0] + 0.5)
+            self.Translaterotate.xTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
+            self.Translaterotate.yTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
+            self.Translaterotate.Rotate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
+            self.Translaterotate.closeEvent = self.Translate_Rotate_closeEvent
+            self.Translaterotate.show()
+            self.Translaterotate.Translaterotate_img_o_pad = self.cImg_o.shape[0] if self.cImg_o.shape[0] > self.cImg_o.shape[1] else self.cImg_o.shape[1]
+            pad = self.Translaterotate.Translaterotate_img_o_pad
+            self.Translaterotate.Translaterotate_img_o = cv2.copyMakeBorder(self.cImg_o, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+            self.Translaterotate.Translaterotate_img_r = self.Translaterotate.Translaterotate_img_o.copy()
+        else:
+            self.Statusbar_Message("No Image")
+
+    def Img_Translate_Rotate(self):
+        Translate = self.Translaterotate
+        y, x, _ = self.cImg_o.shape
+        Ty, Tx, _ = Translate.Translaterotate_img_o.shape
+        pad = Translate.Translaterotate_img_o_pad
+        xTranslate = Translate.xTranslate_Slider
+        yTranslate = Translate.yTranslate_Slider
+        Rotate = Translate.Rotate_Slider
+
+        M = np.float32([[1, 0, xTranslate.value()], [0, 1, yTranslate.value()]])
+        Translate.Translaterotate_img_r = cv2.warpAffine(Translate.Translaterotate_img_o, M, (Tx, Ty))
+
+        M = cv2.getRotationMatrix2D((Tx / 2 + xTranslate.value(), Ty / 2 + yTranslate.value()), Rotate.value(), 1)
+        Translate.Translaterotate_img_r = cv2.warpAffine(Translate.Translaterotate_img_r, M, (Tx, Ty))
+
+        show_img, _, _ = self.cvimgTOqtimg(Translate.Translaterotate_img_r[pad:pad + y, pad:pad + x], p = False)
+        self._window.Img_Lable.setPixmap(show_img)
+
+    def Translate_Rotate_closeEvent(self, event):
+        if self.Translaterotate.seaved:
+            y, x, _ = self.cImg_o.shape
+            pad = self.Translaterotate.Translaterotate_img_o_pad
+            self.cImg_o = self.Translaterotate.Translaterotate_img_r[pad:pad + y, pad:pad + x]
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o, p = False)
+            self.show_img()
+        else:
+            self.show_img()
 
 
 
@@ -253,7 +296,7 @@ class MainWindow(QMainWindow):
         self._window.Image_Thresholding_action.triggered.connect(self.Image_Thresholding)
         self._window.Histogram_Equalization_action.triggered.connect(self.Histogram_Equalization)
         self._window.Perspective_Transform_action.triggered.connect(self.Perspective_Transform)
-
+        self._window.Translate_Rotate_action.triggered.connect(self.Translate_Rotate)
 
 
 

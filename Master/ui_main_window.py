@@ -5,7 +5,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 
-class Ui_MainWindow(QMainWindow):
+class Ui_Main_Window(QMainWindow):
     # def __init__(self):
     #     super(Ui_MainWindow, self).__init__()
     #     self.setupUi(self)
@@ -33,7 +33,6 @@ class Ui_MainWindow(QMainWindow):
         self.OpenFile_action.setText("OpenFile")
         self.OpenFile_action.setShortcut("Ctrl+O")
         self.File_menu.addAction(self.OpenFile_action)
-        self.File_menu.addSeparator()
         self.SaveFile_action = QAction(MainWindow)
         self.SaveFile_action.setText("SaveFile")
         self.SaveFile_action.setShortcut("Ctrl+S")
@@ -46,7 +45,6 @@ class Ui_MainWindow(QMainWindow):
         self.ROI_action = QAction(MainWindow)
         self.ROI_action.setText("ROI")
         self.Setting_menu.addAction(self.ROI_action)
-        self.Setting_menu.addSeparator()
 
         self.Image_Information_menu = QMenu(self.Setting_menu)
         self.Image_Information_menu.setTitle("Image information")
@@ -58,7 +56,6 @@ class Ui_MainWindow(QMainWindow):
         self.Image_Information_menu.addAction(self.Show_Imgsize_action)
         self.Setting_menu.addAction(self.Image_Information_menu.menuAction())
 
-        self.Setting_menu.addSeparator()
         self.Change_Colorspace_menu = QMenu(self.Setting_menu)
         self.Change_Colorspace_menu.setTitle("Change Colorspace")
         self.Change_HSV_action = QAction(MainWindow)
@@ -83,7 +80,16 @@ class Ui_MainWindow(QMainWindow):
         self.Perspective_Transform_action = QAction(MainWindow)
         self.Perspective_Transform_action.setText("Perspective Transform (透視投影轉換)")
         self.Image_Processing_menu.addAction(self.Perspective_Transform_action)
+        self.Geometric_Transform_menu = QMenu(self.Image_Processing_menu)
+        self.Geometric_Transform_menu.setTitle("Geometric Transform (幾何轉換)")
+        self.Translate_Rotate_action = QAction(MainWindow)
+        self.Translate_Rotate_action.setText("Translate and Rotate (平移/旋轉)")
+        self.Geometric_Transform_menu.addAction(self.Translate_Rotate_action)
+
+
+        self.Image_Processing_menu.addAction(self.Geometric_Transform_menu.menuAction())
         
+
         self.Top_menubar.addAction(self.Image_Processing_menu.menuAction())
     #Image_Processing_menu
         MainWindow.setMenuBar(self.Top_menubar)

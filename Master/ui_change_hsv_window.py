@@ -6,9 +6,9 @@ from PySide2.QtWidgets import *
 import numpy as np
 
 
-class Ui_ChangehsvWindow(QWidget):
+class Ui_Change_Hsv_Window(QWidget):
     def __init__(self):
-        super(Ui_ChangehsvWindow, self).__init__()
+        super(Ui_Change_Hsv_Window, self).__init__()
         self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle(u"HSV")
         self.setFixedSize(700, 300)

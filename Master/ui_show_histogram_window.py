@@ -24,11 +24,11 @@ class MplCanvas(FigureCanvasQTAgg):
         super(MplCanvas, self).__init__(fig)
 
 
-class Ui_ShowhistogramWindow(QWidget):
+class Ui_Show_Histogram_Window(QWidget):
     def __init__(self, cImg_o):
-        super(Ui_ShowhistogramWindow, self).__init__()
+        super(Ui_Show_Histogram_Window, self).__init__()
         self.setWindowModality(Qt.ApplicationModal)
-        self.setWindowTitle("Show_histogram")
+        self.setWindowTitle("Show histogram")
         sc = MplCanvas(self)
         self.cImg_o = cImg_o
         color=('b','g','r')

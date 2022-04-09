@@ -5,9 +5,9 @@ from PySide2.QtWidgets import *
 import numpy as np
 
 
-class Ui_ROIWindow(QWidget):
+class Ui_ROI_Window(QWidget):
     def __init__(self, cRoi_o, cRoi_r, qRoi):
-        super(Ui_ROIWindow, self).__init__()
+        super(Ui_ROI_Window, self).__init__()
         self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle("ROI")
         self.setFixedSize(300, 300)

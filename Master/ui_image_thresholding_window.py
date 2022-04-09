@@ -5,13 +5,12 @@ from PySide2.QtWidgets import *
 import numpy as np
 
 
-class Ui_ImagethresholdingWindow(QWidget):
+class Ui_Image_Thresholding_Window(QWidget):
     def __init__(self):
-        super(Ui_ImagethresholdingWindow, self).__init__()
+        super(Ui_Image_Thresholding_Window, self).__init__()
         self.setWindowModality(Qt.ApplicationModal)
-        self.setWindowTitle(u"Image Thresholding")
+        self.setWindowTitle(u"Image Thresholding (影像二值化)")
         self.setFixedSize(700, 100)
-        self.smove = False
         self.seaved = False
         self.Imagethresholding_img = np.zeros((1,1,3), np.uint8)
         self.main_verticalLayout = QVBoxLayout()
@@ -80,22 +79,12 @@ class Ui_ImagethresholdingWindow(QWidget):
 
 
     def threshold_valueChanged(self):
-        self.smove = True
         self.threshold_value.setText(f"{self.threshold_Slider.value()}")
 
     def maximum_valueChanged(self):
-        self.smove = True
         self.maximum_value.setText(f"{self.maximum_Slider.value()}")
 
     def key_Press_Event(self, event):
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
-                if self.smove:
-                        self.seaved = True
-                        self.close()
-
-
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)
-#     window = Ui_ImagethresholdingWindow()
-#     window.show()
-#     sys.exit(app.exec_())
+            self.seaved = True
+            self.close()
