@@ -129,7 +129,7 @@ class Ui_ChangehsvWindow(QWidget):
         self.l_h_horizontalLayout.addWidget(self.l_h)
 
         self.l_h_Slider = QSlider()
-        self.l_h_Slider.setMaximum(250)
+        self.l_h_Slider.setMaximum(255)
         self.l_h_Slider.setValue(0)
         self.l_h_Slider.setOrientation(Qt.Horizontal)
         self.l_h_horizontalLayout.addWidget(self.l_h_Slider)
@@ -155,7 +155,7 @@ class Ui_ChangehsvWindow(QWidget):
         self.l_s_horizontalLayout.addWidget(self.l_s)
 
         self.l_s_Slider = QSlider()
-        self.l_s_Slider.setMaximum(250)
+        self.l_s_Slider.setMaximum(255)
         self.l_s_Slider.setValue(0)
         self.l_s_Slider.setOrientation(Qt.Horizontal)
         self.l_s_horizontalLayout.addWidget(self.l_s_Slider)
@@ -182,7 +182,7 @@ class Ui_ChangehsvWindow(QWidget):
         self.l_v_horizontalLayout.addWidget(self.l_v)
 
         self.l_v_Slider = QSlider()
-        self.l_v_Slider.setMaximum(250)
+        self.l_v_Slider.setMaximum(255)
         self.l_v_Slider.setValue(0)
         self.l_v_Slider.setOrientation(Qt.Horizontal)
         self.l_v_horizontalLayout.addWidget(self.l_v_Slider)

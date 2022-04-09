@@ -1,5 +1,8 @@
-import cv2 as cv
-img = cv.imread('tax_calculator_pytest.jpg')
-cv.imshow('window', img)
-print(img.shape)
-cv.waitKey()
+import numpy as np
+import cv2
+img = cv2.imdecode(np.fromfile('./Img/123.png',dtype=np.uint8),-1)
+cv2.imshow('i',img)
+
+
+
+cv2.waitKey()

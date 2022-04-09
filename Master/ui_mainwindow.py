@@ -75,12 +75,15 @@ class Ui_MainWindow(QMainWindow):
         self.Image_Processing_menu = QMenu(self.Top_menubar)
         self.Image_Processing_menu.setTitle("Image Processing")
         self.Image_Thresholding_action = QAction(MainWindow)
-        self.Image_Thresholding_action.setText("Image Thresholding (二值化)")
+        self.Image_Thresholding_action.setText("Image Thresholding (影像二值化)")
         self.Image_Processing_menu.addAction(self.Image_Thresholding_action)
         self.Histogram_Equalization_action = QAction(MainWindow)
-        self.Histogram_Equalization_action.setText("Histogram Equalization (均衡化)")
+        self.Histogram_Equalization_action.setText("Histogram Equalization (直方圖等化)")
         self.Image_Processing_menu.addAction(self.Histogram_Equalization_action)
-#Histogram_Equalization
+        self.Perspective_Transform_action = QAction(MainWindow)
+        self.Perspective_Transform_action.setText("Perspective Transform (透視投影轉換)")
+        self.Image_Processing_menu.addAction(self.Perspective_Transform_action)
+        
         self.Top_menubar.addAction(self.Image_Processing_menu.menuAction())
     #Image_Processing_menu
         MainWindow.setMenuBar(self.Top_menubar)

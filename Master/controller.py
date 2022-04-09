@@ -11,6 +11,7 @@ from ui_roiwindow import Ui_ROIWindow
 from ui_showhistogramwindow import Ui_ShowhistogramWindow
 from ui_changehsvwindow import Ui_ChangehsvWindow
 from ui_imagethresholdingwindow import Ui_ImagethresholdingWindow
+from ui_perspectivetransformwindow import Ui_PerspectivetransformWindow
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,7 +29,7 @@ class MainWindow(QMainWindow):
         if filename != "":
             self.filename = filename
             print("Open Path :", self.filename)
-            self.cImg_o=cv2.imdecode(np.fromfile(self.filename,dtype=np.uint8),-1)
+            self.cImg_o=cv2.imdecode(np.fromfile(self.filename,dtype=np.uint8),1)
             self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
             self.show_img()
             self.Statusbar_Message(self.filename.split("/")[-1])
@@ -39,18 +40,17 @@ class MainWindow(QMainWindow):
         if self.filename != "":
             filename, _ = QFileDialog.getSaveFileName(self, "SaveFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
             if filename != "":
-                cv2.imencode('.png', self.cImg_o)[1].tofile(filename)
+                cv2.imencode('.jpg', self.cImg_o)[1].tofile(filename)
                 print("Save Path :", filename)
         else:
             self.Statusbar_Message("No Image")
 
-
     def ROI(self):
         if self.filename != "":
+            print('ROI')
             self.ROIWindow = Ui_ROIWindow(self.cImg_o, self.cImg_r, self.qImg)
             self.ROIWindow.closeEvent = self.ROI_closeEvent
             self.ROIWindow.show()
-            print('ROI')
             # ROIWindow.move(((QApplication.desktop().width() - self.width())/2), ((QApplication.desktop().height() - self.height())/2) + 5)
         else:
             self.Statusbar_Message("No Image")
@@ -61,17 +61,17 @@ class MainWindow(QMainWindow):
             self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
             self.show_img()
         
-
     def Show_Histogram(self):
         if self.filename != "":
+            print('Show Histogram')
             self.Showhistogram = Ui_ShowhistogramWindow(self.cImg_o)
             self.Showhistogram.show()
-            print('Showhistogram')
         else:
             self.Statusbar_Message("No Image")
             
     def Change_HSV(self):
         if self.filename != "":
+            print("Change HSV")
             self.ChangeHSV = Ui_ChangehsvWindow()
             self.ChangeHSV.u_h_Slider.valueChanged.connect(self.Img_Change_HSV)
             self.ChangeHSV.u_s_Slider.valueChanged.connect(self.Img_Change_HSV)
@@ -88,13 +88,11 @@ class MainWindow(QMainWindow):
         CHSV = self.ChangeHSV
         upper = np.array([CHSV.u_h_Slider.value(), CHSV.u_s_Slider.value(), CHSV.u_v_Slider.value()])
         lower = np.array([CHSV.l_h_Slider.value(), CHSV.l_s_Slider.value(), CHSV.l_v_Slider.value()])
-        print(upper)
-        print(lower)
         img = self.cImg_o.copy()
         hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
         mask = cv2.inRange(hsv, lower, upper)
         self.ChangeHSV.HCV_img = cv2.bitwise_and(img, img, mask = mask)
-        show_img, _, _ = self.cvimgTOqtimg(self.ChangeHSV.HCV_img)
+        show_img, _, _ = self.cvimgTOqtimg(self.ChangeHSV.HCV_img, p = False)
         self._window.Img_Lable.setPixmap(show_img)
 
     def Change_HSV_closeEvent(self, event):
@@ -107,6 +105,7 @@ class MainWindow(QMainWindow):
 
     def Change_GRAY(self):
         if self.filename != "":
+            print("Change GRAY")
             self.qImg, self.cImg_r, self.cImg_o = self.cvimgTOqtimg(self.cImg_o, color = "GRAY")
             self.show_img()
         else:
@@ -114,6 +113,7 @@ class MainWindow(QMainWindow):
 
     def Show_Imgsize(self):
         if self.filename != "":
+            print("Show Imgsize")
             information = f'Original :\n\tHeight : {self.cImg_o.shape[0]}\n\tWidth  : {self.cImg_o.shape[1]}\n'
             information += f'Show :\n\tHeight : {self.cImg_r.shape[0]}\n\tWidth  : {self.cImg_r.shape[1]}'
             QMessageBox.information(self, 'Image Size', information)
@@ -122,6 +122,7 @@ class MainWindow(QMainWindow):
 
     def Image_Thresholding(self):
         if self.filename != "":
+            print("Image Thresholding")
             self.Imagethresholding = Ui_ImagethresholdingWindow()
             self.Imagethresholding.closeEvent = self.Image_Thresholding_closeEvent
             self.Imagethresholding.threshold_Slider.valueChanged.connect(self.Img_Image_Thresholding)
@@ -150,6 +151,7 @@ class MainWindow(QMainWindow):
 
     def Histogram_Equalization(self):
         if self.filename != "":
+            print("Histogram Equalization")
             ycrcb = cv2.cvtColor(self.cImg_o, cv2.COLOR_BGR2YCR_CB)
             channels = cv2.split(ycrcb)
             cv2.equalizeHist(channels[0], channels[0])
@@ -159,6 +161,21 @@ class MainWindow(QMainWindow):
             self.show_img()
         else:
             self.Statusbar_Message("No Image")
+
+    def Perspective_Transform(self):
+        if self.filename != "":
+            print("Perspective Transform")
+            self.PerspectivetransformWindow = Ui_PerspectivetransformWindow(self.cImg_o, self.cImg_r, self.qImg)
+            self.PerspectivetransformWindow.closeEvent = self.Perspective_Transform_closeEvent
+            self.PerspectivetransformWindow.show()
+        else:
+            self.Statusbar_Message("No Image")
+
+    def Perspective_Transform_closeEvent(self, event):
+        if self.PerspectivetransformWindow.seaved:
+            self.cImg_o = self.PerspectivetransformWindow.cRoi_o
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
+            self.show_img()
 
 
 
@@ -182,11 +199,11 @@ class MainWindow(QMainWindow):
                 self._window.Img_Lable.setFixedSize(300, 300)
                 self.setFixedSize(300, 345)
 
-    def cvimgTOqtimg(self, cvImg, color = "RGB"):
-        print(f'Height : {cvImg.shape[0]}, Width : {cvImg.shape[1]}')
+    def cvimgTOqtimg(self, cvImg, color = "RGB", p = True):
+        if p:print(f'Height : {cvImg.shape[0]}, Width : {cvImg.shape[1]}')
         ocvImg = cvImg.copy()
         if cvImg.shape[0] >960 or cvImg.shape[1] > 1440:
-            cvImg = self.img_resize(cvImg)
+            cvImg = self.img_resize(cvImg, p)
         if color == "RGB":
             ccvImg = cvImg.copy()
             height, width, depth = ccvImg.shape
@@ -201,7 +218,7 @@ class MainWindow(QMainWindow):
             qtImg = QImage(cvImg.data, width, height, width * depth, QImage.Format_RGB888)
         return QPixmap(qtImg), cvImg, ocvImg
 
-    def img_resize(self, image):
+    def img_resize(self, image, p = True):
         height, width = image.shape[0], image.shape[1]
         # 设置新的图片分辨率框架
         height_new = 960
@@ -211,7 +228,7 @@ class MainWindow(QMainWindow):
             img_new = cv2.resize(image, (width_new, int(height * width_new / width + 0.5)))
         else:
             img_new = cv2.resize(image, (int(width * height_new / height + 0.5), height_new))
-        print(f'Show_Height : {img_new.shape[0]}, Show_Width : {img_new.shape[1]}')
+        if p:print(f'Show_Height : {img_new.shape[0]}, Show_Width : {img_new.shape[1]}')
         return img_new
 
     def Statusbar_Message(self, message):
@@ -235,6 +252,7 @@ class MainWindow(QMainWindow):
         self._window.Change_GRAY_action.triggered.connect(self.Change_GRAY)
         self._window.Image_Thresholding_action.triggered.connect(self.Image_Thresholding)
         self._window.Histogram_Equalization_action.triggered.connect(self.Histogram_Equalization)
+        self._window.Perspective_Transform_action.triggered.connect(self.Perspective_Transform)
 
 
 
