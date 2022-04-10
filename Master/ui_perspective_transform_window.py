@@ -7,14 +7,14 @@ import numpy as np
 
 
 class Ui_Perspective_Transform_Window(QWidget):
-    def __init__(self, cRoi_o, cRoi_r, qRoi):
+    def __init__(self, cPT_o, cPT_r, qPT):
         super(Ui_Perspective_Transform_Window, self).__init__()
         self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle("Perspective Transform (透視投影轉換)")
         self.setFixedSize(300, 300)
-        self.cRoi_o = cRoi_o
-        self.cRoi_r = cRoi_r
-        self.qRoi = qRoi
+        self.cPT_o = cPT_o
+        self.cPT_r = cPT_r
+        self.qPT = qPT
         self.pts = []
         self.seave = False
         self.seaved = False
@@ -25,7 +25,7 @@ class Ui_Perspective_Transform_Window(QWidget):
         self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.verticalLayout.addWidget(self.label, 1, Qt.AlignHCenter|Qt.AlignVCenter)
         self.setLayout(self.verticalLayout)
-        self.show_img(self.qRoi)
+        self.show_img(self.qPT)
         self.label.mousePressEvent = self.mouse_Press_Event
         self.keyPressEvent = self.key_Press_Event
         
@@ -124,7 +124,7 @@ class Ui_Perspective_Transform_Window(QWidget):
         print(f"[show_mouse_press] {event.x()=}, {event.y()=}, {event.button()=}")
         self.pts.append([event.x(),event.y()])
         if len(self.pts) > 4 : self.pts.pop(0)
-        ncImg = self.cRoi_r.copy()
+        ncImg = self.cPT_r.copy()
         for x,y in self.pts:
             cv2.circle(ncImg, (x, y), 5, (0, 0, 255), thickness=-1)
         nqImg = self.cvimgTOqtimg(ncImg)
@@ -135,17 +135,17 @@ class Ui_Perspective_Transform_Window(QWidget):
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
             if self.seave == False and len(self.pts) == 4:
                 self.label.mousePressEvent = None
-                self.show_img(self.cvimgTOqtimg(self.four_point_transform(self.cRoi_r, np.array(self.pts))))
+                self.show_img(self.cvimgTOqtimg(self.four_point_transform(self.cPT_r, np.array(self.pts))))
                 self.seave = True
 
             elif self.seave:
-                x = self.cRoi_o.shape[0] / self.cRoi_r.shape[0]
-                self.cRoi_o = self.four_point_transform(self.cRoi_o, np.array(self.pts) * x)
+                x = self.cPT_o.shape[0] / self.cPT_r.shape[0]
+                self.cPT_o = self.four_point_transform(self.cPT_o, np.array(self.pts) * x)
                 self.seaved = True
                 self.close()
 
         if self.seave and event.key() == Qt.Key_Delete or event.key() == Qt.Key_Backspace:
             self.pts = []
             self.seave = False
-            self.show_img(self.qRoi)
+            self.show_img(self.qPT)
             self.label.mousePressEvent = self.mouse_Press_Event

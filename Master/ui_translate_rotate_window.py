@@ -106,10 +106,39 @@ class Ui_Translate_Rotate_Window(QWidget):
         self.setLayout(self.main_verticalLayout)
 
 #####################################################################################
+#Resize value
+        self.Resize_HorizontalLayout = QHBoxLayout()
+
+        self.Resize = QLabel()
+        self.Resize.setText("Resize value")
+        self.Resize.setMinimumSize(QSize(135, 0))
+        self.Resize_HorizontalLayout.addWidget(self.Resize)
+
+        self.Resize_Slider = QSlider()
+        self.Resize_Slider.setMinimum(-50)
+        self.Resize_Slider.setMaximum(50)
+        self.Resize_Slider.setValue(0)
+        self.Resize_Slider.setOrientation(Qt.Horizontal)
+        self.Resize_HorizontalLayout.addWidget(self.Resize_Slider)
+
+        self.Resize_value = QLabel()
+        sizePolicy.setHeightForWidth(self.Resize_value.sizePolicy().hasHeightForWidth())
+        self.Resize_value.setSizePolicy(sizePolicy)
+        self.Resize_value.setMinimumSize(QSize(45, 0))
+        self.Resize_value.setText("0")
+        self.Resize_value.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
+        self.Resize_HorizontalLayout.addWidget(self.Resize_value)
+
+        self.main_verticalLayout.addLayout(self.Resize_HorizontalLayout)
+
+        self.setLayout(self.main_verticalLayout)
+
+#####################################################################################
 
         self.xTranslate_Slider.valueChanged.connect(self.xTranslate_valueChanged)
         self.yTranslate_Slider.valueChanged.connect(self.yTranslate_valueChanged)
         self.Rotate_Slider.valueChanged.connect(self.Rotate_valueChanged)
+        self.Resize_Slider.valueChanged.connect(self.Resize_valueChanged)
         self.keyPressEvent = self.key_Press_Event
 
 
@@ -122,6 +151,9 @@ class Ui_Translate_Rotate_Window(QWidget):
     def Rotate_valueChanged(self):
         self.Rotate_value.setText(f"{self.Rotate_Slider.value()}")
 
+    def Resize_valueChanged(self):
+        self.Resize_value.setText(f"{self.Resize_Slider.value()}")
+
     def key_Press_Event(self, event):
         if event.key() == Qt.Key_Enter or event.key() == Qt.Key_Return:
             self.seaved = True
@@ -131,10 +163,12 @@ class Ui_Translate_Rotate_Window(QWidget):
             self.xTranslate_Slider.setValue(0)
             self.yTranslate_Slider.setValue(0)
             self.Rotate_Slider.setValue(0)
+            self.Resize_Slider.setValue(0)
 
 
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)
-#     window = Ui_Translate_Rotate_Window(10000,10000)
-#     window.show()
-#     sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = Ui_Translate_Rotate_Window(10000,10000)
+    window.show()
+    sys.exit(app.exec_())

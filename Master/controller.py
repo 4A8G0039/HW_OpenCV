@@ -1,7 +1,7 @@
 #designer
 import sys
 import cv2
-
+import math
 
 from PySide2.QtCore import *
 from PySide2.QtGui import *
@@ -174,38 +174,52 @@ class MainWindow(QMainWindow):
 
     def Perspective_Transform_closeEvent(self, event):
         if self.PerspectivetransformWindow.seaved:
-            self.cImg_o = self.PerspectivetransformWindow.cRoi_o
+            self.cImg_o = self.PerspectivetransformWindow.cPT_o
             self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
             self.show_img()
 
     def Translate_Rotate(self):
         if self.filename != "":
-            self.Translaterotate = Ui_Translate_Rotate_Window(self.cImg_o.shape[1] + 0.5,self.cImg_o.shape[0] + 0.5)
+            self.Translaterotate = Ui_Translate_Rotate_Window(self.cImg_r.shape[1] + 0.5,self.cImg_r.shape[0] + 0.5)
             self.Translaterotate.xTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
             self.Translaterotate.yTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
             self.Translaterotate.Rotate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
+            self.Translaterotate.Resize_Slider.valueChanged.connect(self.Img_Translate_Rotate)
             self.Translaterotate.closeEvent = self.Translate_Rotate_closeEvent
             self.Translaterotate.show()
-            self.Translaterotate.Translaterotate_img_o_pad = self.cImg_o.shape[0] if self.cImg_o.shape[0] > self.cImg_o.shape[1] else self.cImg_o.shape[1]
+            self.Translaterotate.Translaterotate_img_o_pad = self.cImg_r.shape[0] if self.cImg_r.shape[0] > self.cImg_r.shape[1] else self.cImg_r.shape[1]
             pad = self.Translaterotate.Translaterotate_img_o_pad
-            self.Translaterotate.Translaterotate_img_o = cv2.copyMakeBorder(self.cImg_o, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+            self.Translaterotate.Translaterotate_img_o = cv2.copyMakeBorder(self.cImg_r, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=(0, 0, 0))
             self.Translaterotate.Translaterotate_img_r = self.Translaterotate.Translaterotate_img_o.copy()
         else:
             self.Statusbar_Message("No Image")
 
-    def Img_Translate_Rotate(self):
+    def Img_Translate_Rotate(self, val):
         Translate = self.Translaterotate
-        y, x, _ = self.cImg_o.shape
-        Ty, Tx, _ = Translate.Translaterotate_img_o.shape
-        pad = Translate.Translaterotate_img_o_pad
-        xTranslate = Translate.xTranslate_Slider
-        yTranslate = Translate.yTranslate_Slider
-        Rotate = Translate.Rotate_Slider
+        if isinstance(val,int):
+            y, x, _ = self.cImg_r.shape
+            Ty, Tx, _ = Translate.Translaterotate_img_o.shape
+            pad = Translate.Translaterotate_img_o_pad
+            xTranslate = Translate.xTranslate_Slider.value()
+            yTranslate = Translate.yTranslate_Slider.value()
+        else:
+            Translate.Translaterotate_img_o_pad = self.cImg_o.shape[0] if self.cImg_o.shape[0] > self.cImg_o.shape[1] else self.cImg_o.shape[1]
+            pad = Translate.Translaterotate_img_o_pad
+            Translate.Translaterotate_img_o = cv2.copyMakeBorder(self.cImg_o, pad, pad, pad, pad, cv2.BORDER_CONSTANT, value=(0, 0, 0))
+            Translate.Translaterotate_img_r = Translate.Translaterotate_img_o.copy()
+            y, x, _ = self.cImg_o.shape
+            Ty, Tx, _ = Translate.Translaterotate_img_o.shape
+            z = self.cImg_o.shape[0] / self.cImg_r.shape[0]
+            xTranslate = Translate.xTranslate_Slider.value() * z
+            yTranslate = Translate.yTranslate_Slider.value() * z
 
-        M = np.float32([[1, 0, xTranslate.value()], [0, 1, yTranslate.value()]])
+        Rotate = Translate.Rotate_Slider.value()
+        Resize = (Translate.Resize_Slider.value() + 51) / 51
+
+        M = np.float32([[1, 0, xTranslate], [0, 1, yTranslate]])
         Translate.Translaterotate_img_r = cv2.warpAffine(Translate.Translaterotate_img_o, M, (Tx, Ty))
 
-        M = cv2.getRotationMatrix2D((Tx / 2 + xTranslate.value(), Ty / 2 + yTranslate.value()), Rotate.value(), 1)
+        M = cv2.getRotationMatrix2D((Tx / 2 + xTranslate, Ty / 2 + yTranslate), Rotate, Resize)
         Translate.Translaterotate_img_r = cv2.warpAffine(Translate.Translaterotate_img_r, M, (Tx, Ty))
 
         show_img, _, _ = self.cvimgTOqtimg(Translate.Translaterotate_img_r[pad:pad + y, pad:pad + x], p = False)
@@ -213,6 +227,7 @@ class MainWindow(QMainWindow):
 
     def Translate_Rotate_closeEvent(self, event):
         if self.Translaterotate.seaved:
+            self.Img_Translate_Rotate("")
             y, x, _ = self.cImg_o.shape
             pad = self.Translaterotate.Translaterotate_img_o_pad
             self.cImg_o = self.Translaterotate.Translaterotate_img_r[pad:pad + y, pad:pad + x]
