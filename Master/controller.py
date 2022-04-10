@@ -13,6 +13,7 @@ from ui_change_hsv_window import Ui_Change_Hsv_Window
 from ui_image_thresholding_window import Ui_Image_Thresholding_Window
 from ui_perspective_transform_window import Ui_Perspective_Transform_Window
 from ui_translate_rotate_window import Ui_Translate_Rotate_Window
+from ui_affine_transform_window import Ui_Affine_Transform_Window
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -99,7 +100,7 @@ class MainWindow(QMainWindow):
     def Change_HSV_closeEvent(self, event):
         if self.ChangeHSV.seaved:
             self.cImg_o = self.ChangeHSV.HCV_img
-            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o, p = False)
             self.show_img()
         else:
             self.show_img()
@@ -130,7 +131,7 @@ class MainWindow(QMainWindow):
             self.Imagethresholding.maximum_Slider.valueChanged.connect(self.Img_Image_Thresholding)
             self.Imagethresholding.show()
             _, self.Imagethresholding.Imagethresholding_img = cv2.threshold(self.cImg_o, 127, 255, cv2.THRESH_BINARY)
-            show_img, _, _ = self.cvimgTOqtimg(self.Imagethresholding.Imagethresholding_img)
+            show_img, _, _ = self.cvimgTOqtimg(self.Imagethresholding.Imagethresholding_img, p = False)
             self._window.Img_Lable.setPixmap(show_img)
         else:
             self.Statusbar_Message("No Image")
@@ -139,7 +140,7 @@ class MainWindow(QMainWindow):
         Threshold_value = self.Imagethresholding.threshold_Slider.value()
         Maximum_value = self.Imagethresholding.maximum_Slider.value()
         _, self.Imagethresholding.Imagethresholding_img = cv2.threshold(self.cImg_o, Threshold_value, Maximum_value, cv2.THRESH_BINARY)
-        show_img, _, _ = self.cvimgTOqtimg(self.Imagethresholding.Imagethresholding_img)
+        show_img, _, _ = self.cvimgTOqtimg(self.Imagethresholding.Imagethresholding_img, p = False)
         self._window.Img_Lable.setPixmap(show_img)
 
     def Image_Thresholding_closeEvent(self, event):
@@ -166,21 +167,22 @@ class MainWindow(QMainWindow):
     def Perspective_Transform(self):
         if self.filename != "":
             print("Perspective Transform")
-            self.PerspectivetransformWindow = Ui_Perspective_Transform_Window(self.cImg_o, self.cImg_r, self.qImg)
-            self.PerspectivetransformWindow.closeEvent = self.Perspective_Transform_closeEvent
-            self.PerspectivetransformWindow.show()
+            self.Perspectivetransform = Ui_Perspective_Transform_Window(self.cImg_o, self.cImg_r, self.qImg)
+            self.Perspectivetransform.closeEvent = self.Perspective_Transform_closeEvent
+            self.Perspectivetransform.show()
         else:
             self.Statusbar_Message("No Image")
 
     def Perspective_Transform_closeEvent(self, event):
-        if self.PerspectivetransformWindow.seaved:
-            self.cImg_o = self.PerspectivetransformWindow.cPT_o
+        if self.Perspectivetransform.seaved:
+            self.cImg_o = self.Perspectivetransform.cPT_o
             self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
             self.show_img()
 
     def Translate_Rotate(self):
         if self.filename != "":
-            self.Translaterotate = Ui_Translate_Rotate_Window(self.cImg_r.shape[1] + 0.5,self.cImg_r.shape[0] + 0.5)
+            print("Translate Rotate")
+            self.Translaterotate = Ui_Translate_Rotate_Window(self.cImg_r.shape[1],self.cImg_r.shape[0])
             self.Translaterotate.xTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
             self.Translaterotate.yTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
             self.Translaterotate.Rotate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
@@ -231,10 +233,18 @@ class MainWindow(QMainWindow):
             y, x, _ = self.cImg_o.shape
             pad = self.Translaterotate.Translaterotate_img_o_pad
             self.cImg_o = self.Translaterotate.Translaterotate_img_r[pad:pad + y, pad:pad + x]
-            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o, p = False)
+            self.qImg, self.cImg_r, _ = self.cvimgTOqtimg(self.cImg_o)
             self.show_img()
         else:
             self.show_img()
+
+    def Affine_Transform(self):
+        if self.filename != "":
+            print("Affine Transform")
+            self.Affinetransform = Ui_Affine_Transform_Window(self)
+            self.Affinetransform.show()
+        else:
+            self.Statusbar_Message("No Image")
 
 
 
@@ -312,6 +322,7 @@ class MainWindow(QMainWindow):
         self._window.Histogram_Equalization_action.triggered.connect(self.Histogram_Equalization)
         self._window.Perspective_Transform_action.triggered.connect(self.Perspective_Transform)
         self._window.Translate_Rotate_action.triggered.connect(self.Translate_Rotate)
+        self._window.Affine_Transform_action.triggered.connect(self.Affine_Transform)
 
 
 

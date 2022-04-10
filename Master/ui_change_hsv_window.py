@@ -234,6 +234,13 @@ class Ui_Change_Hsv_Window(QWidget):
                         self.l_h_Slider.value() != 0 or self.l_s_Slider.value() != 0 or self.l_v_Slider.value() != 0:
                         self.seaved = True
                         self.close()
+        if event.key() == Qt.Key_Delete or event.key() == Qt.Key_Backspace:
+            self.u_h_Slider.setValue(255)
+            self.u_s_Slider.setValue(255)
+            self.u_v_Slider.setValue(255)
+            self.l_h_Slider.setValue(0)
+            self.l_s_Slider.setValue(0)
+            self.l_v_Slider.setValue(0)
 
 # if __name__ == "__main__":
 #     app = QApplication(sys.argv)

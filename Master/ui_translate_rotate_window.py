@@ -1,4 +1,3 @@
-import sys
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
@@ -13,7 +12,6 @@ class Ui_Translate_Rotate_Window(QWidget):
         self.setFixedSize(800, 150)
         self.imgwidth = imgwidth
         self.imgheight = imgheight
-        self.smove = False
         self.seaved = False
         self.Translaterotate_img_o = np.zeros((1,1,3), np.uint8)
         self.Translaterotate_img_o_pad = 0
@@ -164,11 +162,3 @@ class Ui_Translate_Rotate_Window(QWidget):
             self.yTranslate_Slider.setValue(0)
             self.Rotate_Slider.setValue(0)
             self.Resize_Slider.setValue(0)
-
-
-
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = Ui_Translate_Rotate_Window(10000,10000)
-    window.show()
-    sys.exit(app.exec_())
