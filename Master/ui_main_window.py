@@ -80,6 +80,7 @@ class Ui_Main_Window(QMainWindow):
         self.Perspective_Transform_action = QAction(MainWindow)
         self.Perspective_Transform_action.setText("Perspective Transform (透視投影轉換)")
         self.Image_Processing_menu.addAction(self.Perspective_Transform_action)
+
         self.Geometric_Transform_menu = QMenu(self.Image_Processing_menu)
         self.Geometric_Transform_menu.setTitle("Geometric Transform (幾何轉換)")
         self.Translate_Rotate_action = QAction(MainWindow)
@@ -88,14 +89,15 @@ class Ui_Main_Window(QMainWindow):
         self.Affine_Transform_action = QAction(MainWindow)
         self.Affine_Transform_action.setText("Affine Transform (仿射轉換)")
         self.Geometric_Transform_menu.addAction(self.Affine_Transform_action)
-
-
-
         self.Image_Processing_menu.addAction(self.Geometric_Transform_menu.menuAction())
-        
+
+        self.Image_Filtering_action = QAction(self.Image_Processing_menu)
+        self.Image_Filtering_action.setText("Image Filtering (影象濾波)")
+        self.Image_Processing_menu.addAction(self.Image_Filtering_action)
 
         self.Top_menubar.addAction(self.Image_Processing_menu.menuAction())
     #Image_Processing_menu
+
         MainWindow.setMenuBar(self.Top_menubar)
     #MenuBar#
     #StatusBar#

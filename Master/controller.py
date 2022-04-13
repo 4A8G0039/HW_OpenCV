@@ -14,9 +14,9 @@ from ui_image_thresholding_window import Ui_Image_Thresholding_Window
 from ui_perspective_transform_window import Ui_Perspective_Transform_Window
 from ui_translate_rotate_window import Ui_Translate_Rotate_Window
 from ui_affine_transform_window import Ui_Affine_Transform_Window
+from ui_image_filtering_window import Ui_Image_Filtering_Window
 
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 class MainWindow(QMainWindow):
@@ -182,7 +182,7 @@ class MainWindow(QMainWindow):
     def Translate_Rotate(self):
         if self.filename != "":
             print("Translate Rotate")
-            self.Translaterotate = Ui_Translate_Rotate_Window(self.cImg_r.shape[1],self.cImg_r.shape[0])
+            self.Translaterotate = Ui_Translate_Rotate_Window(self.cImg_o.shape[1],self.cImg_o.shape[0])
             self.Translaterotate.xTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
             self.Translaterotate.yTranslate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
             self.Translaterotate.Rotate_Slider.valueChanged.connect(self.Img_Translate_Rotate)
@@ -202,8 +202,9 @@ class MainWindow(QMainWindow):
             y, x, _ = self.cImg_r.shape
             Ty, Tx, _ = Translate.Translaterotate_img_o.shape
             pad = Translate.Translaterotate_img_o_pad
-            xTranslate = Translate.xTranslate_Slider.value()
-            yTranslate = Translate.yTranslate_Slider.value()
+            z = self.cImg_o.shape[0] / self.cImg_r.shape[0]
+            xTranslate = Translate.xTranslate_Slider.value() / z
+            yTranslate = Translate.yTranslate_Slider.value() / z
         else:
             Translate.Translaterotate_img_o_pad = self.cImg_o.shape[0] if self.cImg_o.shape[0] > self.cImg_o.shape[1] else self.cImg_o.shape[1]
             pad = Translate.Translaterotate_img_o_pad
@@ -211,9 +212,8 @@ class MainWindow(QMainWindow):
             Translate.Translaterotate_img_r = Translate.Translaterotate_img_o.copy()
             y, x, _ = self.cImg_o.shape
             Ty, Tx, _ = Translate.Translaterotate_img_o.shape
-            z = self.cImg_o.shape[0] / self.cImg_r.shape[0]
-            xTranslate = Translate.xTranslate_Slider.value() * z
-            yTranslate = Translate.yTranslate_Slider.value() * z
+            xTranslate = Translate.xTranslate_Slider.value()
+            yTranslate = Translate.yTranslate_Slider.value()
 
         Rotate = Translate.Rotate_Slider.value()
         Resize = (Translate.Resize_Slider.value() + 51) / 51
@@ -246,7 +246,13 @@ class MainWindow(QMainWindow):
         else:
             self.Statusbar_Message("No Image")
 
-
+    def Image_Filtering(self):
+        if self.filename != "":
+            print("Affine Transform")
+            self.imagefiltering = Ui_Image_Filtering_Window(self)
+            self.imagefiltering.show()
+        else:
+            self.Statusbar_Message("No Image")
 
 
 
@@ -323,6 +329,7 @@ class MainWindow(QMainWindow):
         self._window.Perspective_Transform_action.triggered.connect(self.Perspective_Transform)
         self._window.Translate_Rotate_action.triggered.connect(self.Translate_Rotate)
         self._window.Affine_Transform_action.triggered.connect(self.Affine_Transform)
+        self._window.Image_Filtering_action.triggered.connect(self.Image_Filtering)
 
 
 
