@@ -15,6 +15,7 @@ from ui_perspective_transform_window import Ui_Perspective_Transform_Window
 from ui_translate_rotate_window import Ui_Translate_Rotate_Window
 from ui_affine_transform_window import Ui_Affine_Transform_Window
 from ui_image_filtering_window import Ui_Image_Filtering_Window
+from ui_canny_edge_detection_window import Ui_Canny_Edge_Detection_Window
 
 import numpy as np
 
@@ -254,6 +255,14 @@ class MainWindow(QMainWindow):
         else:
             self.Statusbar_Message("No Image")
 
+    def Canny_Edge_Detection(self):
+        if self.filename != "":
+            print("Canny Edge Detection")
+            self.cannyedgedetection = Ui_Canny_Edge_Detection_Window(self)
+            self.cannyedgedetection.show()
+        else:
+            self.Statusbar_Message("No Image")
+
 
 
     def show_img(self):
@@ -330,8 +339,7 @@ class MainWindow(QMainWindow):
         self._window.Translate_Rotate_action.triggered.connect(self.Translate_Rotate)
         self._window.Affine_Transform_action.triggered.connect(self.Affine_Transform)
         self._window.Image_Filtering_action.triggered.connect(self.Image_Filtering)
-
-
+        self._window.Canny_Edge_Detection_action.triggered.connect(self.Canny_Edge_Detection)
 
 
 

@@ -5,9 +5,6 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 from image_filtering import *
 
-import numpy as np
-
-
 class Ui_Image_Filtering_Window(QWidget):
     def __init__(self, mainWindow):
         super(Ui_Image_Filtering_Window, self).__init__()
@@ -109,11 +106,3 @@ class Ui_Image_Filtering_Window(QWidget):
         else:
             self.mainWindow.show_img()
 
-
-
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)
-#     image = cv2.imread("./Img/wallpaper_g.png")
-#     win = Ui_Image_Filtering_Window(image)
-#     win.show()
-#     sys.exit(app.exec_())

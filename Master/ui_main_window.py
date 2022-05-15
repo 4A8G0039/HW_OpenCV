@@ -95,6 +95,10 @@ class Ui_Main_Window(QMainWindow):
         self.Image_Filtering_action.setText("Image Filtering (影象濾波)")
         self.Image_Processing_menu.addAction(self.Image_Filtering_action)
 
+        self.Canny_Edge_Detection_action = QAction(self.Image_Processing_menu)
+        self.Canny_Edge_Detection_action.setText("Canny Edge Detection (Canny邊緣檢測)")
+        self.Image_Processing_menu.addAction(self.Canny_Edge_Detection_action)
+
         self.Top_menubar.addAction(self.Image_Processing_menu.menuAction())
     #Image_Processing_menu
 
