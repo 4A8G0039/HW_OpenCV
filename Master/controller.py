@@ -248,7 +248,7 @@ class MainWindow(QMainWindow):
 
     def Image_Filtering(self):
         if self.filename != "":
-            print("Affine Transform")
+            print("Image Filtering")
             self.imagefiltering = Ui_Image_Filtering_Window(self)
             self.imagefiltering.show()
         else:
