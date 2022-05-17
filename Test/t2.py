@@ -1,24 +1,33 @@
-import cv2
-from PySide2.QtCore import *
-from PySide2.QtGui import *
-from PySide2.QtWidgets import *
+import random
+import cv2 as cv
+import numpy as np
+
+def thresh_callback(val):
+    threshold = val
+    # Detect edges using Canny
+    canny_output = cv.Canny(src_gray, threshold, threshold * 2)
+    # Find contours
+    contours, hierarchy = cv.findContours(canny_output, cv.RETR_TREE, cv.CHAIN_APPROX_SIMPLE)
+    # Draw contours
+    drawing = np.zeros((canny_output.shape[0], canny_output.shape[1], 3), dtype=np.uint8)
+    for i in range(len(contours)):
+        color = (random.randint(0,256), random.randint(0,256), random.randint(0,256))
+        cv.drawContours(drawing, contours, i, color, 2, cv.LINE_8, hierarchy, 0)
+    # Show in a window
+    cv.imshow('Contours', drawing)
 
 
-def img_resize(image, p = True):
-    height, width = image.shape[0], image.shape[1]
-    # 设置新的图片分辨率框架
-    height_new = 960
-    width_new = 1440
-    # 判断图片的长宽比率
-    if width / height >= width_new / height_new:
-        img_new = cv2.resize(image, (width_new, int(height * width_new / width + 0.5)))
-    else:
-        img_new = cv2.resize(image, (int(width * height_new / height + 0.5), height_new))
-    if p:print(f'Show_Height : {img_new.shape[0]}, Show_Width : {img_new.shape[1]}')
-    return img_new
-
-def SaveFile(cImg_o):
-    cv2.imencode('.png', cImg_o)[1].tofile(".\Img\Feature_Description__2.png")
-
-img = cv2.imread(".\Img\Feature_Description_2.png")
-SaveFile(img_resize(img))
+# Load source image
+src = cv.imread(".\Img\wallpaper.png")
+# Convert image to gray and blur it
+src_gray = cv.cvtColor(src, cv.COLOR_BGR2GRAY)
+src_gray = cv.blur(src_gray, (3,3))
+# Create Window
+source_window = 'Source'
+cv.namedWindow(source_window)
+cv.imshow(source_window, src)
+max_thresh = 255
+thresh = 100 # initial threshold
+cv.createTrackbar('Canny Thresh:', source_window, thresh, max_thresh, thresh_callback)
+thresh_callback(thresh)
+cv.waitKey()

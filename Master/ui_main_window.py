@@ -113,6 +113,9 @@ class Ui_Main_Window(QMainWindow):
         self.Feature_Description_action = QAction(self.Image_Detection_menu)
         self.Feature_Description_action.setText("Feature Description (特徵匹配)")
         self.Image_Detection_menu.addAction(self.Feature_Description_action)
+        self.Finding_Contours_action = QAction(self.Image_Detection_menu)
+        self.Finding_Contours_action.setText("Finding contours (尋找輪廓)")
+        self.Image_Detection_menu.addAction(self.Finding_Contours_action)
 
         self.Top_menubar.addAction(self.Image_Detection_menu.menuAction())
     #Image_Detection_menu
