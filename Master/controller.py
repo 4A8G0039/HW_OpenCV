@@ -1,4 +1,3 @@
-#designer
 import sys
 import cv2
 import math
@@ -16,6 +15,7 @@ from ui_translate_rotate_window import Ui_Translate_Rotate_Window
 from ui_affine_transform_window import Ui_Affine_Transform_Window
 from ui_image_filtering_window import Ui_Image_Filtering_Window
 from ui_canny_edge_detection_window import Ui_Canny_Edge_Detection_Window
+from ui_hough_line_transform_window import Ui_Hough_Line_Transform_Window
 
 import numpy as np
 
@@ -263,24 +263,32 @@ class MainWindow(QMainWindow):
         else:
             self.Statusbar_Message("No Image")
 
+    def Hough_Line_Transform(self):
+        if self.filename != "":
+            print("Hough Line Transform")
+            self.houghlinetransform = Ui_Hough_Line_Transform_Window(self)
+            self.houghlinetransform.show()
+        else:
+            self.Statusbar_Message("No Image")
+
 
 
     def show_img(self):
         self._window.Img_Lable.setPixmap(self.qImg)
-        if self.qImg.size().width() >= 300:
-            if self.qImg.size().height() >= 300:
+        if self.qImg.size().width() >= 400:
+            if self.qImg.size().height() >= 400:
                 self._window.Img_Lable.setFixedSize(self.qImg.size().width(), self.qImg.size().height())
                 self.setFixedSize(self.qImg.size().width(), self.qImg.size().height() + 45)
             else:
-                self._window.Img_Lable.setFixedSize(self.qImg.size().width(), 300)
-                self.setFixedSize(self.qImg.size().width(), 345)
+                self._window.Img_Lable.setFixedSize(self.qImg.size().width(), 400)
+                self.setFixedSize(self.qImg.size().width(), 445)
         else:
-            if self.qImg.size().height() >= 300:
-                self._window.Img_Lable.setFixedSize(300, self.qImg.size().height())
-                self.setFixedSize(300, self.qImg.size().height() + 45)
+            if self.qImg.size().height() >= 400:
+                self._window.Img_Lable.setFixedSize(400, self.qImg.size().height())
+                self.setFixedSize(400, self.qImg.size().height() + 45)
             else:
-                self._window.Img_Lable.setFixedSize(300, 300)
-                self.setFixedSize(300, 345)
+                self._window.Img_Lable.setFixedSize(400, 400)
+                self.setFixedSize(400, 445)
 
     def cvimgTOqtimg(self, cvImg, color = "RGB", p = True):
         if p:print(f'Height : {cvImg.shape[0]}, Width : {cvImg.shape[1]}')
@@ -340,6 +348,7 @@ class MainWindow(QMainWindow):
         self._window.Affine_Transform_action.triggered.connect(self.Affine_Transform)
         self._window.Image_Filtering_action.triggered.connect(self.Image_Filtering)
         self._window.Canny_Edge_Detection_action.triggered.connect(self.Canny_Edge_Detection)
+        self._window.Hough_Line_Transform_action.triggered.connect(self.Hough_Line_Transform)
 
 
 

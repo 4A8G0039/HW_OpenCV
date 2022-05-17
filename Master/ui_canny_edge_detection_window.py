@@ -1,19 +1,15 @@
-import sys
 import cv2
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
-import numpy as np
-
-
 class Ui_Canny_Edge_Detection_Window(QWidget):
     def __init__(self, mainWindow):
         super(Ui_Canny_Edge_Detection_Window, self).__init__()
-        self.setWindowTitle("Canny Edge Detection")
+        self.setWindowModality(Qt.ApplicationModal)
+        self.setWindowTitle("Canny Edge Detection (Canny邊緣檢測)")
         self.setFixedSize(700, 100)
         self.seaved = False
-        self.index = 0
         self.mainWindow = mainWindow
         self.main_verticalLayout = QVBoxLayout()
 
@@ -31,7 +27,7 @@ class Ui_Canny_Edge_Detection_Window(QWidget):
         self.threshold_low_horizontalLayout.addWidget(self.threshold_low)
 
         self.threshold_low_Slider = QSlider()
-        self.threshold_low_Slider.setMaximum(100)
+        self.threshold_low_Slider.setMaximum(255)
         self.threshold_low_Slider.setValue(0)
         self.threshold_low_Slider.setOrientation(Qt.Horizontal)
         self.threshold_low_horizontalLayout.addWidget(self.threshold_low_Slider)
@@ -57,7 +53,7 @@ class Ui_Canny_Edge_Detection_Window(QWidget):
         self.ratio_horizontalLayout.addWidget(self.ratio)
 
         self.ratio_Slider = QSlider()
-        self.ratio_Slider.setMaximum(10)
+        self.ratio_Slider.setMaximum(40)
         self.ratio_Slider.setValue(0)
         self.ratio_Slider.setPageStep(1)
         self.ratio_Slider.setOrientation(Qt.Horizontal)
@@ -67,7 +63,7 @@ class Ui_Canny_Edge_Detection_Window(QWidget):
         sizePolicy.setHeightForWidth(self.ratio_value.sizePolicy().hasHeightForWidth())
         self.ratio_value.setSizePolicy(sizePolicy)
         self.ratio_value.setMinimumSize(QSize(30, 0))
-        self.ratio_value.setText("2.0")
+        self.ratio_value.setText("1.0")
         self.ratio_value.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
         self.ratio_horizontalLayout.addWidget(self.ratio_value)
 
@@ -113,7 +109,7 @@ class Ui_Canny_Edge_Detection_Window(QWidget):
 
     def valueChanged(self):
         self.threshold_l_v = self.threshold_low_Slider.value()
-        self.ratio_v = 2 + (self.ratio_Slider.value() * 0.1)
+        self.ratio_v = 1 + round(self.ratio_Slider.value() * 0.1, 1)
         self.ksize_v = (self.ksize_Slider.value()) * 2 - 1
         self.threshold_low_value.setText(f"{self.threshold_l_v}")
         self.ratio_value.setText(f"{self.ratio_v}")

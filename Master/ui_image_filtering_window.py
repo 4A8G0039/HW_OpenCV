@@ -8,6 +8,7 @@ from image_filtering import *
 class Ui_Image_Filtering_Window(QWidget):
     def __init__(self, mainWindow):
         super(Ui_Image_Filtering_Window, self).__init__()
+        self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle("Blur (均值濾波)")
         self.setFixedSize(820, 100)
         self.seaved = False

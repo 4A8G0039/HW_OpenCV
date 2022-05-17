@@ -1,0 +1,3 @@
+designer
+
+pyside2-uic untitled.ui > u.py
