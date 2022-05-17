@@ -17,6 +17,7 @@ from ui_image_filtering_window import Ui_Image_Filtering_Window
 from ui_canny_edge_detection_window import Ui_Canny_Edge_Detection_Window
 from ui_hough_line_transform_window import Ui_Hough_Line_Transform_Window
 from ui_harris_corner_detection_window import Ui_Harris_Corner_Detection_Window
+from ui_feature_detection_window import Ui_Feature_Detection_Window
 
 import numpy as np
 
@@ -29,7 +30,7 @@ class MainWindow(QMainWindow):
         self.setup_control()
 
     def OpenFile(self):
-        filename, _ = QFileDialog.getOpenFileName(self, "OpenFile", "./", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
+        filename, _ = QFileDialog.getOpenFileName(self, "OpenFile", "./Img", "Image Files(*.png *.jpg *.jpeg *.bmp *.tif)")
         if filename != "":
             self.filename = filename
             print("Open Path :", self.filename)
@@ -275,8 +276,16 @@ class MainWindow(QMainWindow):
     def Harris_Corner_Detection(self):
         if self.filename != "":
             print("Harris Corner Detection")
-            self.houghlinetransform = Ui_Harris_Corner_Detection_Window(self)
-            self.houghlinetransform.show()
+            self.harriscornerdetection = Ui_Harris_Corner_Detection_Window(self)
+            self.harriscornerdetection.show()
+        else:
+            self.Statusbar_Message("No Image")
+
+    def Feature_Detection(self):
+        if self.filename != "":
+            print("Feature Detection")
+            self.featuredetection = Ui_Feature_Detection_Window(self)
+            self.featuredetection.show()
         else:
             self.Statusbar_Message("No Image")
 
@@ -358,6 +367,9 @@ class MainWindow(QMainWindow):
         self._window.Canny_Edge_Detection_action.triggered.connect(self.Canny_Edge_Detection)
         self._window.Hough_Line_Transform_action.triggered.connect(self.Hough_Line_Transform)
         self._window.Harris_Corner_Detection_action.triggered.connect(self.Harris_Corner_Detection)
+        self._window.Feature_Detection_action.triggered.connect(self.Feature_Detection)
+
+
 
 
 if __name__ == "__main__":
