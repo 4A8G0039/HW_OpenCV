@@ -9,7 +9,7 @@ class Ui_Harris_Corner_Detection_Window(QWidget):
         super(Ui_Harris_Corner_Detection_Window, self).__init__()
         self.setWindowModality(Qt.ApplicationModal)
         self.setWindowTitle("Harris Corner Detection (Harris角點檢測)")
-        self.setFixedSize(700, 100)
+        self.setFixedSize(700, 50)
         self.seaved = False
         self.mainWindow = mainWindow
         self.threshold_v = 150
@@ -24,7 +24,7 @@ class Ui_Harris_Corner_Detection_Window(QWidget):
         self.threshold_horizontalLayout = QHBoxLayout()
 
         self.threshold = QLabel()
-        self.threshold.setMinimumSize(QSize(120, 0))
+        self.threshold.setMinimumSize(QSize(100, 0))
         self.threshold.setText("Threshold value")
         self.threshold_horizontalLayout.addWidget(self.threshold)
 
@@ -64,6 +64,7 @@ class Ui_Harris_Corner_Detection_Window(QWidget):
         self.mainWindow._window.Img_Lable.setPixmap(show_img)
 
     def Harris_Corner_Detector(self):
+        thresh = self.threshold_v
         # Detector parameters
         blockSize = 2
         apertureSize = 3
@@ -79,7 +80,7 @@ class Ui_Harris_Corner_Detection_Window(QWidget):
         # Drawing a circle around corners
         for i in range(dst_norm.shape[0]):
             for j in range(dst_norm.shape[1]):
-                if int(dst_norm[i,j]) > self.threshold_v:
+                if int(dst_norm[i,j]) > thresh:
                     cv2.circle(img, (j,i), 5, (0, 0, 255), 1)
         return img
 
