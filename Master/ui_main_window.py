@@ -104,6 +104,9 @@ class Ui_Main_Window(QMainWindow):
         self.Hough_Line_Transform_action = QAction(self.Image_Detection_menu)
         self.Hough_Line_Transform_action.setText("Hough Line Transform (霍夫轉換)")
         self.Image_Detection_menu.addAction(self.Hough_Line_Transform_action)
+        self.Harris_Corner_Detection_action = QAction(self.Image_Detection_menu)
+        self.Harris_Corner_Detection_action.setText("Harris Corner Detection (Harris角點檢測)")
+        self.Image_Detection_menu.addAction(self.Harris_Corner_Detection_action)
 
         self.Top_menubar.addAction(self.Image_Detection_menu.menuAction())
     #Image_Detection_menu

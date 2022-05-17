@@ -16,6 +16,7 @@ from ui_affine_transform_window import Ui_Affine_Transform_Window
 from ui_image_filtering_window import Ui_Image_Filtering_Window
 from ui_canny_edge_detection_window import Ui_Canny_Edge_Detection_Window
 from ui_hough_line_transform_window import Ui_Hough_Line_Transform_Window
+from ui_harris_corner_detection_window import Ui_Harris_Corner_Detection_Window
 
 import numpy as np
 
@@ -271,6 +272,13 @@ class MainWindow(QMainWindow):
         else:
             self.Statusbar_Message("No Image")
 
+    def Harris_Corner_Detection(self):
+        if self.filename != "":
+            print("Harris Corner Detection")
+            self.houghlinetransform = Ui_Harris_Corner_Detection_Window(self)
+            self.houghlinetransform.show()
+        else:
+            self.Statusbar_Message("No Image")
 
 
     def show_img(self):
@@ -349,7 +357,7 @@ class MainWindow(QMainWindow):
         self._window.Image_Filtering_action.triggered.connect(self.Image_Filtering)
         self._window.Canny_Edge_Detection_action.triggered.connect(self.Canny_Edge_Detection)
         self._window.Hough_Line_Transform_action.triggered.connect(self.Hough_Line_Transform)
-
+        self._window.Harris_Corner_Detection_action.triggered.connect(self.Harris_Corner_Detection)
 
 
 if __name__ == "__main__":
