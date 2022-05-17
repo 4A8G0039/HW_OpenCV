@@ -1,18 +1,24 @@
-import numpy as np
-import cv2 as cv
+import cv2
+from PySide2.QtCore import *
+from PySide2.QtGui import *
+from PySide2.QtWidgets import *
 
-filename = "./Img/wallpaper.png"
-img = cv.imread(filename)
-gray = cv.cvtColor(img,cv.COLOR_BGR2GRAY) #轉化灰度圖
 
-gray = np.float32(gray)
-dst = cv.cornerHarris(gray,2,3,0.04)
+def img_resize(image, p = True):
+    height, width = image.shape[0], image.shape[1]
+    # 设置新的图片分辨率框架
+    height_new = 960
+    width_new = 1440
+    # 判断图片的长宽比率
+    if width / height >= width_new / height_new:
+        img_new = cv2.resize(image, (width_new, int(height * width_new / width + 0.5)))
+    else:
+        img_new = cv2.resize(image, (int(width * height_new / height + 0.5), height_new))
+    if p:print(f'Show_Height : {img_new.shape[0]}, Show_Width : {img_new.shape[1]}')
+    return img_new
 
-#result is dilated for marking the corners, not important
-dst = cv.dilate(dst,None) #形態學運算，膨脹
+def SaveFile(cImg_o):
+    cv2.imencode('.png', cImg_o)[1].tofile(".\Img\Feature_Description__2.png")
 
-# Threshold for an optimal value, it may vary depending on the image.
-img[dst>0.01*dst.max()]=[0,0,255]
-cv.imshow('dst',img)
-if cv.waitKey(0) & 0xff == 27:
-    cv.destroyAllWindows()
+img = cv2.imread(".\Img\Feature_Description_2.png")
+SaveFile(img_resize(img))

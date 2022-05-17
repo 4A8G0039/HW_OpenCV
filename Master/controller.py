@@ -18,6 +18,7 @@ from ui_canny_edge_detection_window import Ui_Canny_Edge_Detection_Window
 from ui_hough_line_transform_window import Ui_Hough_Line_Transform_Window
 from ui_harris_corner_detection_window import Ui_Harris_Corner_Detection_Window
 from ui_feature_detection_window import Ui_Feature_Detection_Window
+from ui_feature_description_window import Ui_Feature_Description_Window
 
 import numpy as np
 
@@ -289,20 +290,30 @@ class MainWindow(QMainWindow):
         else:
             self.Statusbar_Message("No Image")
 
-
-    def show_img(self):
-        self._window.Img_Lable.setPixmap(self.qImg)
-        if self.qImg.size().width() >= 400:
-            if self.qImg.size().height() >= 400:
-                self._window.Img_Lable.setFixedSize(self.qImg.size().width(), self.qImg.size().height())
-                self.setFixedSize(self.qImg.size().width(), self.qImg.size().height() + 45)
-            else:
-                self._window.Img_Lable.setFixedSize(self.qImg.size().width(), 400)
-                self.setFixedSize(self.qImg.size().width(), 445)
+    def Feature_Description(self):
+        if self.filename != "":
+            print("Feature Description")
+            self.featuredescription = Ui_Feature_Description_Window(self)
+            self.featuredescription.show()
         else:
-            if self.qImg.size().height() >= 400:
-                self._window.Img_Lable.setFixedSize(400, self.qImg.size().height())
-                self.setFixedSize(400, self.qImg.size().height() + 45)
+            self.Statusbar_Message("No Image")
+
+
+    def show_img(self, img = None):
+        if img == None:
+            img = self.qImg
+        self._window.Img_Lable.setPixmap(img)
+        if img.size().width() >= 400:
+            if img.size().height() >= 400:
+                self._window.Img_Lable.setFixedSize(img.size().width(), img.size().height())
+                self.setFixedSize(img.size().width(), img.size().height() + 45)
+            else:
+                self._window.Img_Lable.setFixedSize(img.size().width(), 400)
+                self.setFixedSize(img.size().width(), 445)
+        else:
+            if img.size().height() >= 400:
+                self._window.Img_Lable.setFixedSize(400, img.size().height())
+                self.setFixedSize(400, img.size().height() + 45)
             else:
                 self._window.Img_Lable.setFixedSize(400, 400)
                 self.setFixedSize(400, 445)
@@ -368,6 +379,7 @@ class MainWindow(QMainWindow):
         self._window.Hough_Line_Transform_action.triggered.connect(self.Hough_Line_Transform)
         self._window.Harris_Corner_Detection_action.triggered.connect(self.Harris_Corner_Detection)
         self._window.Feature_Detection_action.triggered.connect(self.Feature_Detection)
+        self._window.Feature_Description_action.triggered.connect(self.Feature_Description)
 
 
 
