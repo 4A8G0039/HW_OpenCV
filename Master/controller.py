@@ -20,6 +20,7 @@ from ui_harris_corner_detection_window import Ui_Harris_Corner_Detection_Window
 from ui_feature_detection_window import Ui_Feature_Detection_Window
 from ui_feature_description_window import Ui_Feature_Description_Window
 from ui_finding_contours_window import Ui_Finding_Contours_Window
+from ui_morphology_transformations_window import Ui_Morphology_Transformations_Window
 
 import numpy as np
 
@@ -307,6 +308,14 @@ class MainWindow(QMainWindow):
         else:
             self.Statusbar_Message("No Image")
 
+    def Morphology_Transformations(self):
+        if self.filename != "":
+            print("Morphology Transformations")
+            self.morphologytransformations = Ui_Morphology_Transformations_Window(self)
+            self.morphologytransformations.show()
+        else:
+            self.Statusbar_Message("No Image")
+
 
     def show_img(self, img = None):
         if img == None:
@@ -390,6 +399,7 @@ class MainWindow(QMainWindow):
         self._window.Feature_Detection_action.triggered.connect(self.Feature_Detection)
         self._window.Feature_Description_action.triggered.connect(self.Feature_Description)
         self._window.Finding_Contours_action.triggered.connect(self.Finding_Contours)
+        self._window.Morphology_Transformations_action.triggered.connect(self.Morphology_Transformations)
 
 
 

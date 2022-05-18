@@ -80,7 +80,6 @@ class Ui_Hough_Line_Transform_Window(QWidget):
 
         self.main_verticalLayout.addLayout(self.ratio_horizontalLayout)
 
-        self.setLayout(self.main_verticalLayout)
 
 #####################################################################################
 #Ksize value
@@ -108,7 +107,6 @@ class Ui_Hough_Line_Transform_Window(QWidget):
 
         self.main_verticalLayout.addLayout(self.ksize_horizontalLayout)
 
-        self.setLayout(self.main_verticalLayout)
 
 #LINE
 #####################################################################################
@@ -163,6 +161,8 @@ class Ui_Hough_Line_Transform_Window(QWidget):
         self.hough_threshold_low_horizontalLayout.addWidget(self.hough_threshold_low_value)
 
         self.main_verticalLayout.addLayout(self.hough_threshold_low_horizontalLayout)
+
+        self.setLayout(self.main_verticalLayout)
 
 #####################################################################################
 

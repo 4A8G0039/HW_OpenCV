@@ -116,6 +116,9 @@ class Ui_Main_Window(QMainWindow):
         self.Finding_Contours_action = QAction(self.Image_Detection_menu)
         self.Finding_Contours_action.setText("Finding contours (尋找輪廓)")
         self.Image_Detection_menu.addAction(self.Finding_Contours_action)
+        self.Morphology_Transformations_action = QAction(self.Image_Detection_menu)
+        self.Morphology_Transformations_action.setText("Morphology Transformations (形態轉換)")
+        self.Image_Detection_menu.addAction(self.Morphology_Transformations_action)
 
         self.Top_menubar.addAction(self.Image_Detection_menu.menuAction())
     #Image_Detection_menu
